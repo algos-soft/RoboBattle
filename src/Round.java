@@ -1,5 +1,8 @@
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -14,6 +17,9 @@ import javax.swing.JSlider;
 public class Round extends JPanel{
 	private Bot bot1;
 	private Bot bot2;
+
+	BotComponent comp1;
+	BotComponent comp2;
 	
 	public Round(Bot bot1, Bot bot2) {
 		super();
@@ -26,23 +32,58 @@ public class Round extends JPanel{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Battle b = new Battle(Round.this.bot1, Round.this.bot2);
+				final Battle b = new Battle(Round.this);
 				b.pack();
 				b.setVisible(true);
+
+				// quando la finestra si chiude aggiorno lo stato
+				b.addWindowListener(new WindowAdapter() {
+					@Override
+					public void windowClosed(WindowEvent e) {
+						setWinner(b.getWinner());
+					}
+				});
 			}
 		});
-		
-		add(new BotComponent(bot1));
+
+		comp1=new BotComponent(bot1);
+		comp2=new BotComponent(bot2);
+		add(comp1);
 		add(new JLabel("vs."));
-		add(new BotComponent(bot2));
+		add(comp2);
 		
 		add(bStart);
 
 
 	}
+
+	/**
+	 * regola il vincitore
+	 */
+	private void setWinner(Bot bot){
+		comp1.setBackground(Color.LIGHT_GRAY);
+		comp2.setBackground(Color.LIGHT_GRAY);
+		if(bot!=null){
+			if(bot.equals(bot1)){
+				comp1.setBackground(Color.YELLOW);
+			}
+			if(bot.equals(bot2)){
+				comp2.setBackground(Color.YELLOW);
+			}
+		}
+	}
 	
 	public String toString(){
 		return bot1.getNome()+" vs. "+bot2.getNome();
 	}
-	
+
+	public Bot getBot1() {
+		return bot1;
+	}
+
+	public Bot getBot2() {
+		return bot2;
+	}
+
+
 }

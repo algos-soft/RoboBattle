@@ -20,6 +20,8 @@ public class BotWorker extends SwingWorker<Void, Integer> {
 	private int maxQueueSize = 1000; // max dimensione coda prima di overflow
 	private int richiestePerSecondo = 0; // numero di parole inviate al bot per
 											// secondo
+	private boolean finished;	// se l'elaborazione Ã¨ terminata
+	private boolean overflow;	// se il bot Ã¨ andato in overflow
 	private int totRichiesteElaborate = 0; // numero di richieste elaborate
 	private int totRisposteErrate = 0; // numero di risposte errate
 
@@ -86,12 +88,15 @@ public class BotWorker extends SwingWorker<Void, Integer> {
 			// se la dimensione della coda supera il massimo, ha perso e si
 			// ferma
 			if (queue.size() > maxQueueSize) {
+				finished=true;
+				overflow=true;
 				publish(queue.size());
 				stop = true;
 			}
 
-			// se la battaglia è finita, si ferma
+			// se la battaglia Ã¨ finita, si ferma
 			if (battle.isFinished()) {
+				finished=true;
 				stop = true;
 			}
 
@@ -101,7 +106,7 @@ public class BotWorker extends SwingWorker<Void, Integer> {
 	}
 
 	/**
-	 * Verifica se una risposta è corretta.
+	 * Verifica se una risposta ï¿½ corretta.
 	 * @param request la richiesta
 	 * @param response la risposta
 	 * @return true se corretta
@@ -134,6 +139,7 @@ public class BotWorker extends SwingWorker<Void, Integer> {
 		if (queue.size() > maxQueueSize) {
 			bar.setForeground(Color.red);
 			bar.setString("Overflow!");
+			battle.workerFinished(this);
 		}
 	}
 
@@ -150,4 +156,15 @@ public class BotWorker extends SwingWorker<Void, Integer> {
 		}
 	}
 
+	public boolean isOverflow() {
+		return overflow;
+	}
+
+	public boolean isFinished() {
+		return finished;
+	}
+
+	public Bot getBot() {
+		return bot;
+	}
 }

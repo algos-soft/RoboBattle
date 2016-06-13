@@ -1,11 +1,9 @@
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -31,9 +29,9 @@ public class RoboBattle extends CenteredFrame {
 		bots = new ArrayList<Bot>();
 
 		bots.add(new RoboBot());
-		bots.add(new SuperBot());
-		bots.add(new MegaBot());
 		bots.add(new GigaBot());
+		bots.add(new MegaBot());
+		bots.add(new KiloBot());
 
 		start();
 	}
@@ -78,6 +76,7 @@ public class RoboBattle extends CenteredFrame {
 		JPanel pan = new JPanel();
 		BoxLayout layout = new BoxLayout(pan, BoxLayout.Y_AXIS);
 		pan.setLayout(layout);
+		pan.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
 		return pan;
 	}
 

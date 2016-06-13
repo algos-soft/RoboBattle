@@ -1,10 +1,10 @@
 import java.math.BigInteger;
 
-public class SuperBot implements Bot {
+public class KiloBot implements Bot {
 
 	@Override
 	public String getNome() {
-		return "SuperBot";
+		return "KiloBot";
 	}
 	
 	@Override
