@@ -60,10 +60,14 @@ public class BotWorker extends SwingWorker<Void, Integer> {
 
 			// invia una parola al bot e la rimuove dalla coda
 			if (queue.size() > 0) {
+
 				String request = queue.remove(0);
-				String response = bot.rispondi(request);
+				String response1 = bot.inverti(request);
+
+				int response2 = bot.checksum(request);
+				String response3 = bot.decrypt(request, "ABGHDEG");
 				// verifica la risposta
-				boolean ok=checkResponse(request, response);
+				boolean ok=checkResponse(request, response1);
 				if(!ok){
 					totRisposteErrate++;
 				}
