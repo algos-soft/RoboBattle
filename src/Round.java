@@ -4,11 +4,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JSlider;
 
 
 /**
@@ -32,7 +30,7 @@ public class Round extends JPanel{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				final Battle b = new Battle(Round.this);
+				final Arena b = new Arena(Round.this);
 				b.pack();
 				b.setVisible(true);
 
@@ -61,14 +59,12 @@ public class Round extends JPanel{
 	 * regola il vincitore
 	 */
 	private void setWinner(Bot bot){
-		comp1.setBackground(Color.LIGHT_GRAY);
-		comp2.setBackground(Color.LIGHT_GRAY);
 		if(bot!=null){
 			if(bot.equals(bot1)){
-				comp1.setBackground(Color.YELLOW);
+				comp1.setWinner(true);
 			}
 			if(bot.equals(bot2)){
-				comp2.setBackground(Color.YELLOW);
+				comp2.setWinner(true);
 			}
 		}
 	}

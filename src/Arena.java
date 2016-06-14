@@ -1,7 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -18,7 +17,7 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-public class Battle extends CenteredFrame{
+public class Arena extends CenteredFrame{
 
 	private Round round;
 	private JProgressBar bar1;
@@ -38,7 +37,7 @@ public class Battle extends CenteredFrame{
 
 	private Bot winner;
 
-	public Battle(Round round) {
+	public Arena(Round round) {
 		super();
 		this.round=round;
 		//setPreferredSize(new Dimension(600,400));
@@ -58,7 +57,7 @@ public class Battle extends CenteredFrame{
 			
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				labelSpeed.setText(speedSlider.getValue()+" richieste/sec");
+				updateSliderText();
 			}
 		});
 
@@ -92,7 +91,7 @@ public class Battle extends CenteredFrame{
 		panBattle.setLayout(layout);
 
 		JPanel pBots = new JPanel();
-		pBots.setLayout(new GridLayout(0,2, 10, 10));
+		pBots.setLayout(new GridLayout(0, 2, 10, 10));
 		pBots.add(new BotComponent(getBot1()));
 		pBots.add(new BotComponent(getBot2()));
 		pBots.add(bar1);
@@ -100,7 +99,8 @@ public class Battle extends CenteredFrame{
 		pBots.add(labelStatus1);
 		pBots.add(labelStatus2);
 
-		speedSlider.setValue(0);
+		speedSlider.setValue(50);
+		updateSliderText();
 		
 		panBattle.add(pBots);
 		panBattle.add(labelSpeed);
@@ -108,6 +108,10 @@ public class Battle extends CenteredFrame{
 		panBattle.add(labelWinner);
 
 		return panBattle;
+	}
+
+	private void updateSliderText(){
+		labelSpeed.setText(speedSlider.getValue()+" richieste/sec");
 	}
 	
 
@@ -125,8 +129,8 @@ public class Battle extends CenteredFrame{
 			public void actionPerformed(ActionEvent arg0) {
 				if(!(finished|running)){
 					bStart.setText("Stop");
-					worker1=new BotWorker(Battle.this, getBot1(), bar1, labelStatus1);
-					worker2=new BotWorker(Battle.this, getBot2(), bar2, labelStatus2);
+					worker1=new BotWorker(Arena.this, getBot1(), bar1, labelStatus1);
+					worker2=new BotWorker(Arena.this, getBot2(), bar2, labelStatus2);
 					worker1.execute();
 					worker2.execute();
 					running=true;

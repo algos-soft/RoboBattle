@@ -5,14 +5,13 @@ import java.util.Random;
 
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
-import javax.swing.JSlider;
 import javax.swing.SwingWorker;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 public class BotWorker extends SwingWorker<Void, Integer> {
 
-	private Battle battle; // la Battle di riferimento
+	private Arena battle; // la Battle di riferimento
 	private Bot bot; // il bot impegnato
 	private JProgressBar bar; // la progress bar della coda
 	private JLabel labelStatus; // label per lo status del bot
@@ -26,7 +25,7 @@ public class BotWorker extends SwingWorker<Void, Integer> {
 	private int totRisposteErrate = 0; // numero di risposte errate
 
 
-	public BotWorker(final Battle battle, Bot bot, JProgressBar bar, JLabel labelStatus) {
+	public BotWorker(final Arena battle, Bot bot, JProgressBar bar, JLabel labelStatus) {
 		super();
 		this.battle = battle;
 		this.bot = bot;

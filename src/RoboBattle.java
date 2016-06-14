@@ -5,11 +5,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 public class RoboBattle extends CenteredFrame {
 
@@ -38,7 +34,8 @@ public class RoboBattle extends CenteredFrame {
 
 	private void start() {
 		createRounds();
-		
+//		invalidate();
+//		repaint();
 	}
 
 	/**
@@ -54,14 +51,13 @@ public class RoboBattle extends CenteredFrame {
 				Bot bot2 = aBots[j];
 				rounds.add(new Round(bot1, bot2));
 			}
-		
 		}
 		
 		Collections.shuffle(rounds);
 
 		// mette i rounds graficamente nel pannello
 		panRounds.removeAll();
-		for(Round r : rounds){
+		for (Round r : rounds) {
 			panRounds.add(r);
 		}
 
@@ -93,10 +89,20 @@ public class RoboBattle extends CenteredFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				int risp = JOptionPane.showConfirmDialog(RoboBattle.this, "Sei sicuro?", "Nuova battaglia",
+						JOptionPane.YES_NO_OPTION);
+
+				if (risp == JOptionPane.YES_OPTION) {
+					start();
+					//SwingUtilities.updateComponentTreeUI(RoboBattle.this);
+					RoboBattle.this.invalidate();
+					RoboBattle.this.validate();
+					RoboBattle.this.repaint();
+				}
 			}
 		});
 		panel.add(bNewBattle);
-		
+
 		JButton bEsci = new JButton("Esci");
 		bEsci.addActionListener(new ActionListener() {
 
