@@ -22,10 +22,36 @@ public interface Bot {
 	Color getColore();
 
 
-	public String rispondi(String in);
+	/**
+	 * Inverte le lettere di una parola.
+	 * @param in la parola in ingresso
+	 * @return la parola scritta al contrario.
+	 */
+	String inverti(String in);
 
-	public static final String[] STRINGHE = { "telegrafato", "metallografico", "scacchiera", "perpendicolarit�",
-			"tepidario", "ventottenne", "plantigrado", "posero", "lillipuziano", "scioline", "deportare", "usualit�",
+	/**
+	 * Calcola la checksum di una parola.
+	 * Determina il valore di ogni carattere e restituisce la somma totale.
+	 * @param in la parola in ingresso
+	 * @return la checksum
+	 */
+	int checksum(String in);
+
+	/**
+	 * Cripta una parola in base a una chiave.
+	 * @param in la parola da invertire
+	 * @param key la chiave da usare
+	 * @return la parola criptata.
+	 * La chiave è definita come segue:
+	 * Il primo carattere corrisponde alla lettera A
+	 */
+	String encrypt(String in, String key);
+
+
+
+
+	public static final String[] STRINGHE = { "telegrafato", "metallografico", "scacchiera", "perpendicolarità",
+			"tepidario", "ventottenne", "plantigrado", "posero", "lillipuziano", "scioline", "deportare", "usualità",
 			"radiotelegrafista", "input", "amministrare", "cadranno", "disaminare", "absidata", "solido", "inserto",
 			"piramide", "imbasciata", "uvea", "inflitta", "desioso", "rinunziabile", "incarbonchisce", "zoppicare",
 			"nascondibile", "intrigare", "diffusibile", "frangiluce", "cresime", "incoronante", "menando", "direbbero",
@@ -33,16 +59,16 @@ public interface Bot {
 			"trancista", "temporario", "pacificazione", "mastio", "immorsatura", "odorando", "Camerun", "spatico",
 			"trafile", "Tiberio", "ciabattona", "acherontea", "rilasciando", "sirtici", "accomunante", "carrozzare",
 			"plutone", "predisporsi", "contestatario", "moffetta", "agrimensura", "posticipato", "arrischiare",
-			"patentare", "canasta", "rifrugato", "opporreste", "ineffettuabilit�", "stoccato", "Edimburgo", "cheliceri",
+			"patentare", "canasta", "rifrugato", "opporreste", "ineffettuabilità", "stoccato", "Edimburgo", "cheliceri",
 			"pseudogravidanza", "miagolando", "biconsonantico", "germinazione", "inguaribile", "Kurdistan",
 			"miticizzato", "spannare", "cogliona", "tartassamento", "brugi", "sinizesi", "distorco", "ammaestrando",
 			"vestiarista", "softball", "fiorentino", "affannato", "inferire", "telefonia", "varrai", "iperrealista",
 			"lessicografo", "gerontologia", "tioacido", "riesportazione", "cogliere", "automobilina", "disintegrazione",
 			"avvolse", "preoccupato", "irresoluto", "slang", "Fogazzaro", "transcutaneo", "guatemalteco", "pittore",
-			"bullo", "metafisicamente", "imbrattato", "rimpiazzato", "siringato", "refrigerando", "deterr�",
+			"bullo", "metafisicamente", "imbrattato", "rimpiazzato", "siringato", "refrigerando", "deterrente",
 			"appuntiscano", "circuizione", "ruppe", "polimerico", "acquamarina", "stoicismo", "vermicolare", "lembo",
 			"contrafforte", "vulgato", "alloctona", "supervisionare", "verbasco", "ambigua", "livellare", "cocomero",
-			"basando", "ponderabilit�", "micronutriente", "vincheto", "creando", "picchiettare", "sanctus",
+			"basando", "ponderabilità", "micronutriente", "vincheto", "creando", "picchiettare", "sanctus",
 			"trentamila", "protestantesimo", "soffregare", "asserente", "ritiratisi", "agguerrendo", "benediva",
 			"Ippocrate", "vecchio", "Camus", "monostele", "rasoiata", "discorsino", "ponderato", "contraggo",
 			"salpingite", "riscontrare", "profane", "recluderete", "butirrico", "spiino", "fognaiolo", "ripescaggio",
@@ -53,7 +79,7 @@ public interface Bot {
 			"disimpegnando", "rasciugamento", "inesatto", "invalidazione", "depauperamento", "celidonia", "conferito",
 			"contraete", "tergali", "temperamentale", "volteggiato", "tradurrete", "stampaggio", "corporativista",
 			"chemioterapico", "resistibile", "iugulatore", "paracadute", "modulario", "sticometro", "cancan",
-			"incontrovertibilit�", "patibolo", "leve", "microproiettore", "patrilineare", "disruptiva", "tratterreste",
+			"incontrovertibilità", "patibolo", "leve", "microproiettore", "patrilineare", "disruptiva", "tratterreste",
 			"museale", "prispolone", "stiracchiare", "inattivato", "manovratrice", "stranendo", "guanteria",
 			"aconitina", "acclive", "Gallura", "incollaggio", "accomodante", "valalla", "infusione", "immusonivi",
 			"annuario", "cariofillato", "insettivora", "insidioso", "insignorendo", "colato", "arrotolato", "vanghetta",
@@ -69,14 +95,14 @@ public interface Bot {
 			"ristorazione", "allegrezza", "sellaio", "ottenere", "lobby", "innovato", "realizzato", "attraevamo",
 			"Anselmo", "trepestii", "abietta", "moralista", "apache", "corpulento", "acetificare", "supponevo",
 			"tosone", "monadelfo", "minor", "linfoide", "sciagurataggine", "impigrirsi", "cripte", "epistemologa",
-			"disonest�", "stracossero", "spiritello", "monospermia", "nitruro", "interattiva", "felicitare",
+			"disonestà", "stracossero", "spiritello", "monospermia", "nitruro", "interattiva", "felicitare",
 			"periscopio", "gamete", "blasto", "sienite", "papilla", "comparso", "pollino", "semoloso", "barracano",
-			"binatoio", "quadragesimo", "commestibilit�", "daltonico", "monitor", "amniocentesi", "protofillo",
+			"binatoio", "quadragesimo", "commestibilità", "daltonico", "monitor", "amniocentesi", "protofillo",
 			"librare", "indissi", "ambiscano", "epifisi", "fatato", "innamorare", "manganina", "fiondando",
 			"passivismo", "bipolide", "accapezzato", "vettoriale", "clavaria", "circoncisione", "spallare", "bottale",
 			"neoliberista", "allobiologica", "specchietto", "britannico", "indottrinando", "baldanza", "soggiacque",
 			"intertedesco", "ludico", "riottenuto", "enervare", "capoguardia", "inestinta", "abbazia", "gemito",
-			"neurochirurgico", "Pluto", "selenografo", "fitologia", "sprovvistane", "proscioglier�", "sericina",
+			"neurochirurgico", "Pluto", "selenografo", "fitologia", "sprovvistane", "proscioglierò", "sericina",
 			"diversificare", "dissipatezza", "polonia", "indeprecabile", "permutatrice", "inviperente", "fotografico",
 			"vaporizzatore", "enfisema", "nefelometro", "addrizzato", "informe", "anticrittogamico", "vulnerabile",
 			"tessendo", "marioleria", "ganda", "Mississippi", "sgualcitura", "Davide", "apparentare", "adempiuto",
@@ -85,8 +111,8 @@ public interface Bot {
 			"snodabile", "debuttare", "endemia", "teosofia", "accattivando", "quagliere", "obbiettivamente",
 			"biasimevole", "nemmanco", "aperiodica", "bullone", "piombare", "anteporne", "divelliate", "lacrime",
 			"europeo", "polimelodico", "dipinto", "borsaia", "stagnatore", "dimezzato", "sinterizzando", "smungeresti",
-			"vascolarizzazione", "batoidei", "sovvenzionando", "galoppatoio", "spicciato", "maledir�", "riconsegnando",
-			"infiorettante", "diaconessa", "implicitissima", "nichelare", "visigoto", "novellista", "tecnicit�",
+			"vascolarizzazione", "batoidei", "sovvenzionando", "galoppatoio", "spicciato", "maledirò", "riconsegnando",
+			"infiorettante", "diaconessa", "implicitissima", "nichelare", "visigoto", "novellista", "tecnicità",
 			"mutria", "broccoletto", "fiacchezza", "copule", "anteponevano", "gennaio", "uscendo", "impugnando",
 			"nectonico", "banditrice", "circonverresti", "canton", "monofonditrice", "vitellino", "sollevazione",
 			"mite", "livellabile", "tauriforme", "transato", "fustellatrice", "spermio", "lungomare", "ottenersi",
@@ -103,23 +129,23 @@ public interface Bot {
 			"infornante", "anastigmatica", "nastrare", "capoversi", "versoio", "irrompendo", "antipatia", "sbassato",
 			"delibazione", "soprafinestra", "frolle", "abbonamento", "marginalizzando", "sagrestia", "rinfocato",
 			"rinsaldando", "immalinconire", "egotismo", "rieducando", "triumviro", "fluviale", "cionco", "emissaria",
-			"almanaccare", "forchettone", "imperscrutabilit�", "amminico", "coglierci", "tamponando", "armistiziale",
+			"almanaccare", "forchettone", "imperscrutabilità", "amminico", "coglierci", "tamponando", "armistiziale",
 			"odontolito", "sganascione", "immaginifico", "default", "donde", "insonorizzare", "radarterapia",
 			"microscheda", "oltremontana", "Savino", "iperonimo", "schiudendo", "antipaticissima", "bivieri",
 			"anabolizzante", "anossia", "bicarbonato", "igrometrica", "fibra", "estravaganza", "sostituibile",
 			"unitariano", "detersi", "appartando", "granatino", "convezione", "pastone", "forbiciaio", "arctoideo",
 			"soluzione", "appannare", "arrovellato", "rendicontando", "ecumene", "cinquantenne", "basco", "bidonista",
-			"spiccace", "ammonisca", "braccando", "infettivit�", "epistemologico", "insolentente", "deputazione",
+			"spiccace", "ammonisca", "braccando", "infettività", "epistemologico", "insolentente", "deputazione",
 			"ghiaione", "anconetana", "divelleva", "utilizzatore", "cantoria", "imbracato", "decongelando",
 			"besciamella", "pennelleggiando", "insospettendo", "comunella", "spossamento", "orango", "interponeste",
 			"periferia", "maomettano", "disambiguare", "sopravvivranno", "vocalizzato", "volleando", "tesaurizzatrice",
-			"arida", "novazione", "anecoica", "spoderando", "strippare", "riassorbirsi", "velleit�", "Cosimo",
+			"arida", "novazione", "anecoica", "spoderando", "strippare", "riassorbirsi", "velleità", "Cosimo",
 			"volantinaggio", "sprovincializzato", "Afragola", "incarbonchire", "sussurrio", "davate", "circondurre",
-			"richiedibile", "libecciata", "scabbioso", "tixotropico", "atticizzato", "lustrare", "decriptato", "cos�",
+			"richiedibile", "libecciata", "scabbioso", "tixotropico", "atticizzato", "lustrare", "decriptato", "così",
 			"sovrapposto", "ubiquitario", "ortogenetica", "abduca", "trattatello", "attivatore", "viscoso", "creabile",
 			"Enrico", "pompeggiato", "indelicato", "onomatopeico", "brancando", "approntante", "iperrealista",
 			"padellaio", "gappista", "telesismo", "incomposta", "basettone", "retromarcia", "motivetto", "porremo",
-			"coito", "schivato", "ritualit�", "idolatrico", "assemblato", "manterr�", "relazionalit�", "scoperchiando",
+			"coito", "schivato", "ritualità", "idolatrico", "assemblato", "manterrò", "relazionalità", "scoperchiando",
 			"negoziando", "colorando", "iodo", "australiana", "trottatrice", "investigatore", "infoscando",
 			"arteriografia", "respirabile", "diniego", "monete", "minsero", "girigogolo", "avvicendamento", "ignobile",
 			"ambrato", "vaporizzatore", "buonora", "ostello", "punzecchiando", "occiduo", "sciabole", "millivolt",
@@ -148,16 +174,16 @@ public interface Bot {
 			"rincuorare", "etiologia", "ammusare", "scrosciando", "superstite", "accreditato", "infibulato",
 			"stazzando", "fertilizzare", "immancabile", "verbigerazione", "abbaruffare", "istillante", "ambiando",
 			"peccatrice", "incartatore", "impruando", "slavistica", "ricompresero", "erbaceo", "suffragetta",
-			"immelensirsi", "pentalineo", "eguagliato", "trascinatrice", "temporizzando", "calorosit�", "subordinativo",
-			"incensurabilit�", "ministrato", "spadroneggiare", "analizzala", "scacchiare", "antiporta",
+			"immelensirsi", "pentalineo", "eguagliato", "trascinatrice", "temporizzando", "calorosità", "subordinativo",
+			"incensurabilità", "ministrato", "spadroneggiare", "analizzala", "scacchiare", "antiporta",
 			"avventurosissimo", "lussuoso", "filofascista", "neurotropo", "provinciale", "magnanina", "contagiare",
 			"pecorone", "fustellare", "calesse", "sbianchimento", "circonvengono", "trazione", "infrascritta",
-			"scavatura", "azzardare", "arbusto", "giurare", "frammentariet�", "moderando", "bromico", "scranna",
+			"scavatura", "azzardare", "arbusto", "giurare", "frammentarietà", "moderando", "bromico", "scranna",
 			"disabilitare", "sbirraglia", "bagnasciuga", "apostrofando", "pasquinata", "pluricampione", "ipotiroidea",
 			"bancoposta", "traforare", "scissero", "pluriplano", "rabbino", "budino", "autotrofo", "lubrificativo",
 			"anodina", "interalleata", "avvezzamento", "ritrattamento", "emarginare", "oneroso", "remeggiare",
 			"immaginosa", "mulinando", "etmoidale", "derogazione", "strigliatura", "ibernazione", "seguace", "imitante",
-			"duttilit�", "popolarizzato", "eternando", "protomedico", "gravitone", "breakfast", "ingranato", "crown",
+			"duttilità", "popolarizzato", "eternando", "protomedico", "gravitone", "breakfast", "ingranato", "crown",
 			"tamponamento", "epidemiologica" };
 
 }
