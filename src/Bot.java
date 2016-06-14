@@ -38,15 +38,15 @@ public interface Bot {
 	int checksum(String in);
 
 	/**
-	 * Cripta una parola in base a una chiave.
-	 * @param in la parola da invertire
-	 * @param key la chiave da usare
-	 * @return la parola criptata.
-	 * La chiave è definita come segue:
-	 * Il primo carattere corrisponde alla lettera A
+	 * Decripta una parola in base a una chiave data.
+	 * @param in la parola da decrittare
+	 * @param key la chiave
+	 * @return la parola decrittata.
+	 * La somma delle vocali contenute nella chiave dà un numero segreto.
+	 * Alle lettere in posizione pari va aggiunto il numero segreto
+	 * Alle lettere in posizione dispari va sottratto il numero segreto
 	 */
-	String encrypt(String in, String key);
-
+	String decrypt(String in, String key);
 
 
 
