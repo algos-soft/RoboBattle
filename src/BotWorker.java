@@ -12,7 +12,7 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
 	private Bot bot; // il bot impegnato
 	private JProgressBar bar; // la progress bar della coda
 	private JLabel labelStatus; // label per lo status del bot
-	private int totRequests =10000000;	// numero totale di richieste da inviare in una sessione di test
+	private int totRequests;	// numero totale di richieste da inviare in una sessione di test
 	private Random random = new Random();	// random generator
 	private boolean finished;	// se l'elaborazione è terminata
 
@@ -115,7 +115,7 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
 			bar.setValue(percent);
 			bar.setString(percent+"%");
 			String snum = NumberFormat.getIntegerInstance().format(+s.getNumRequests());
-			labelStatus.setText("tot: " + snum +" CPU time: "+s.getElapsedString());
+			labelStatus.setText("tot: " + snum +" - CPU time: "+s.getElapsedString());
 
 			Color c;
 			if (percent < 75) {
