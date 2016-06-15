@@ -1,45 +1,37 @@
-import java.awt.Color;
-import java.util.ArrayList;
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.text.NumberFormat;
 import java.util.List;
 import java.util.Random;
 
-import javax.swing.JLabel;
-import javax.swing.JProgressBar;
-import javax.swing.SwingWorker;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+public class BotWorker extends SwingWorker<Void, JobStatus> {
 
-public class BotWorker extends SwingWorker<Void, Integer> {
-
-	private Arena battle; // la Battle di riferimento
+	private Arena arena; // la Battle di riferimento
 	private Bot bot; // il bot impegnato
 	private JProgressBar bar; // la progress bar della coda
 	private JLabel labelStatus; // label per lo status del bot
-	private List<String> queue; // la coda di stringhe
-	private int maxQueueSize = Arena.MAX_QUEUE_SIZE; // max dimensione coda prima di overflow
-	private int richiestePerSecondo = 0; // numero di parole inviate al bot per
-											// secondo
+	private int totRequests =10000000;	// numero totale di richieste da inviare in una sessione di test
+	private Random random = new Random();	// random generator
 	private boolean finished;	// se l'elaborazione è terminata
-	private boolean overflow;	// se il bot è andato in overflow
-	private int totRichiesteElaborate = 0; // numero di richieste elaborate
-	private int totRisposteErrate = 0; // numero di risposte errate
 
 
-	public BotWorker(final Arena battle, Bot bot, JProgressBar bar, JLabel labelStatus) {
+	public BotWorker(final Arena arena, Bot bot, JProgressBar bar, JLabel labelStatus) {
 		super();
-		this.battle = battle;
+		this.arena = arena;
 		this.bot = bot;
 		this.bar = bar;
 		this.labelStatus = labelStatus;
 
 		bar.setStringPainted(true);
 
-		richiestePerSecondo = battle.getSpeedSlider().getValue();
-		battle.getSpeedSlider().addChangeListener(new ChangeListener() {
+		totRequests = arena.getSpeedSlider().getValue();
+		arena.getSpeedSlider().addChangeListener(new ChangeListener() {
 
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				richiestePerSecondo = battle.getSpeedSlider().getValue();
+				totRequests = arena.getSpeedSlider().getValue();
 			}
 		});
 
@@ -47,59 +39,43 @@ public class BotWorker extends SwingWorker<Void, Integer> {
 
 	@Override
 	protected Void doInBackground() throws Exception {
-		queue = new ArrayList<String>();
-
-		// addBlock(Bot.STRINGHE.length/10);
 
 		boolean stop = false;
+		long totRichiesteElaborate=0;
 		long lastUpdateMillis = 0;
-		long lastBlockAddMillis = 0;
+		long totTimeNanos=0;
 
-		// long startMillis=System.currentTimeMillis();
 		while (!stop) {
 
-			// invia una parola al bot e la rimuove dalla coda
-			if (queue.size() > 0) {
+			// fa eseguire una operazione al bot
+			long jobStartNanos=System.nanoTime();
+			doJob();
+			long jobLengthNano=System.nanoTime()-jobStartNanos;
+			totTimeNanos+=jobLengthNano;
 
-				String request = queue.remove(0);
-				String response = bot.sortWord(request);
-				boolean ok=checkResponse(request, response);
+			//amplifica il tempo trascorso per dare importanza al tempo impiegato
+			//Thread.sleep(jobLengthNano/10000);
 
-//				int response2 = bot.checksum(request);
-//				String response3 = bot.decrypt(request, "ABGHDEG");
-
-				// verifica la risposta
-				if(!ok){
-					totRisposteErrate++;
-				}
-				totRichiesteElaborate++;
-			}
-
-			// ogni 250 millis aggiunge un nuovo blocco di parole alla coda
-			long elapsedSinceLastBlockAdd = System.currentTimeMillis() - lastBlockAddMillis;
-			if (elapsedSinceLastBlockAdd > 10) {
-				addBlock(richiestePerSecondo / 4);
-				lastBlockAddMillis = System.currentTimeMillis();
-			}
+			totRichiesteElaborate++;
 
 			// ogni tanto pubblica lo stato di avanzamento
 			long elapsedSinceLastUpdate = System.currentTimeMillis() - lastUpdateMillis;
 			if (elapsedSinceLastUpdate > 250) {
-				publish(queue.size());
+				JobStatus status = new JobStatus(totRichiesteElaborate, totTimeNanos/1000000);
+				publish(status);
 				lastUpdateMillis = System.currentTimeMillis();
 			}
 
-			// se la dimensione della coda supera il massimo, ha perso e si
-			// ferma
-			if (queue.size() > maxQueueSize) {
+			// quando ha elaborato tutte le righieste previste si ferma
+			if (totRichiesteElaborate >= totRequests) {
 				finished=true;
-				overflow=true;
-				publish(queue.size());
+				JobStatus status = new JobStatus(totRichiesteElaborate,  totTimeNanos/1000000);
+				publish(status);
 				stop = true;
 			}
 
 			// se la battaglia è finita, si ferma
-			if (battle.isFinished()) {
+			if (arena.isFinished()) {
 				finished=true;
 				stop = true;
 			}
@@ -107,6 +83,14 @@ public class BotWorker extends SwingWorker<Void, Integer> {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Esegue un job sul bot
+	 */
+	private void doJob(){
+		String request=getRandomString();
+		String response = bot.sortWord(request);
 	}
 
 	/**
@@ -125,12 +109,13 @@ public class BotWorker extends SwingWorker<Void, Integer> {
 
 
 	@Override
-	protected void process(List<Integer> chunks) {
-		for (int i : chunks) {
-			int percent = 100 * i / maxQueueSize;
+	protected void process(List<JobStatus> chunks) {
+		for (JobStatus s : chunks) {
+			int percent =(int)(100 * s.getNumRequests() / totRequests);
 			bar.setValue(percent);
-			bar.setString("" + queue.size());
-			labelStatus.setText("tot: " + totRichiesteElaborate);
+			bar.setString(percent+"%");
+			String snum = NumberFormat.getIntegerInstance().format(+s.getNumRequests());
+			labelStatus.setText("tot: " + snum +" CPU time: "+s.getElapsedString());
 
 			Color c;
 			if (percent < 75) {
@@ -145,29 +130,32 @@ public class BotWorker extends SwingWorker<Void, Integer> {
 
 	@Override
 	protected void done() {
-		if (queue.size() > maxQueueSize) {
-			bar.setForeground(Color.red);
-			bar.setString("Overflow!");
-			battle.workerFinished(this);
-		}
+		bar.setForeground(Color.red);
+		bar.setString("Terminato!");
+		arena.workerFinished(this);
 	}
+
+//	/**
+//	 * Aggiunge alla coda un blocco di parole prese a caso.
+//	 *
+//	 * @param blockSize
+//	 *            quante parole aggiungere
+//	 */
+//	private void addBlock(int blockSize) {
+//		for (int i = 0; i < blockSize; i++) {
+//			int rnd = random.nextInt(Bot.STRINGHE.length);
+//			queue.add(Bot.STRINGHE[rnd]);
+//		}
+//	}
 
 	/**
-	 * Aggiunge alla coda un blocco di parole prese a caso.
-	 * 
-	 * @param blockSize
-	 *            quante parole aggiungere
+	 * Ritorna una stringa random dal pool delle stringhe.
 	 */
-	private void addBlock(int blockSize) {
-		for (int i = 0; i < blockSize; i++) {
-			int random = new Random().nextInt(Bot.STRINGHE.length);
-			queue.add(Bot.STRINGHE[random]);
-		}
+	private String getRandomString() {
+		int rnd = random.nextInt(Bot.STRINGHE.length);
+		return Bot.STRINGHE[rnd];
 	}
 
-	public boolean isOverflow() {
-		return overflow;
-	}
 
 	public boolean isFinished() {
 		return finished;
@@ -176,4 +164,5 @@ public class BotWorker extends SwingWorker<Void, Integer> {
 	public Bot getBot() {
 		return bot;
 	}
+
 }

@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -19,8 +20,7 @@ import javax.swing.event.ChangeListener;
 
 public class Arena extends CenteredFrame{
 
-	public static int MAX_REQ_PER_SEC=200000;
-	public static int MAX_QUEUE_SIZE=2000000;
+	public static int DEFAULT_REQ_PER_SESSION=10000000;
 
 	private Round round;
 	private JProgressBar bar1;
@@ -51,7 +51,7 @@ public class Arena extends CenteredFrame{
 		bar2=new JProgressBar(0,100);
 		
 		speedSlider = new JSlider();
-		speedSlider.setMaximum(MAX_REQ_PER_SEC);
+		speedSlider.setMaximum(DEFAULT_REQ_PER_SESSION);
 		speedSlider.setMajorTickSpacing(speedSlider.getMaximum()/2);
 		speedSlider.setPaintTicks(true);
 		speedSlider.setPaintLabels(true);
@@ -102,7 +102,7 @@ public class Arena extends CenteredFrame{
 		pBots.add(labelStatus1);
 		pBots.add(labelStatus2);
 
-		speedSlider.setValue(50);
+		speedSlider.setValue(DEFAULT_REQ_PER_SESSION/2);
 		updateSliderText();
 		
 		panBattle.add(pBots);
@@ -114,7 +114,8 @@ public class Arena extends CenteredFrame{
 	}
 
 	private void updateSliderText(){
-		labelSpeed.setText(speedSlider.getValue()+" richieste/sec");
+		String snum = NumberFormat.getIntegerInstance().format(+speedSlider.getValue());
+		labelSpeed.setText("Tot. "+snum+" richieste");
 	}
 	
 
@@ -190,17 +191,17 @@ public class Arena extends CenteredFrame{
 			}
 		}
 
-		// se è un overflow assegna il trofeo all'altro bot
-		if(worker.isOverflow()){
-			if(winner==null){
-				if(worker.equals(worker1)){
-					winner=worker2.getBot();
-				}else{
-					winner=worker1.getBot();
-				}
-				labelWinner.setText("Winner: "+winner.getNome());
-			}
-		}
+//		// se è un overflow assegna il trofeo all'altro bot
+//		if(worker.isOverflow()){
+//			if(winner==null){
+//				if(worker.equals(worker1)){
+//					winner=worker2.getBot();
+//				}else{
+//					winner=worker1.getBot();
+//				}
+//				labelWinner.setText("Winner: "+winner.getNome());
+//			}
+//		}
 
 	}
 

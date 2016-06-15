@@ -39,9 +39,6 @@ public class KiloBot implements Bot {
 
 	@Override
 	public String sortWord(String in) {
-		for(int i=0;i<10000;i++){
-			BigInteger.ONE.multiply(BigInteger.valueOf(i));
-		}
 		return BotAlgorhitms.sortWordBad(in);
 	}
 

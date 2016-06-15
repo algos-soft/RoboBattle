@@ -4,9 +4,20 @@
 public class MainTest {
 
     public static void main(String[] args){
-        Bot bot = new RoboBot();
-        BotTester tester = new BotTester(bot);
+        BotTester tester;
+
+
+
+//        tester=new BotTester(new RoboBot());
+//        tester.setLogLevel(1);
+//        tester.startTest();
+
+        tester=new BotTester(new KiloBot());
+        tester.setLogLevel(1);
         tester.startTest();
+
+
+        //new BotTester(new KiloBot()).startTest();
     }
 
 }
