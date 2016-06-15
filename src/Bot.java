@@ -27,7 +27,7 @@ public interface Bot {
 	 * @param in la parola in ingresso
 	 * @return la parola scritta al contrario.
 	 */
-	String inverti(String in);
+	String invertWord(String in);
 
 	/**
 	 * Calcola la checksum di una parola.
@@ -35,7 +35,7 @@ public interface Bot {
 	 * @param in la parola in ingresso
 	 * @return la checksum
 	 */
-	int checksum(String in);
+	int calcChecksum(String in);
 
 	/**
 	 * Decripta una parola in base a una chiave data.
@@ -46,7 +46,14 @@ public interface Bot {
 	 * Alle lettere in posizione pari va aggiunto il numero segreto
 	 * Alle lettere in posizione dispari va sottratto il numero segreto
 	 */
-	String decrypt(String in, String key);
+	String decryptWord(String in, String key);
+
+	/**
+	 * Ordina alfabeticamente le lettere di una parola.
+	 * @param in la parola da ordinare
+	 * @return la parola ordinata.
+	 */
+	String sortWord(String in);
 
 
 
