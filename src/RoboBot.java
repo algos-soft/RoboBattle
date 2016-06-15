@@ -23,6 +23,25 @@ public class RoboBot implements Bot {
 	}
 
 	@Override
+	public String invertWord(String in) {
+		return "";
+	}
+
+	@Override
+	public int calcChecksum(String in) {
+		return 0;
+	}
+
+	@Override
+	public String decryptWord(String in, String key) {
+		return null;
+	}
+
+	@Override
+	public String sortWord(String in) {
+		return BotAlgorhitms.sortWord(in);
+	}
+
 	public String rispondi(String in) {
 		for(int i=0;i<50000;i++){
             BigInteger.ONE.multiply(BigInteger.valueOf(i));

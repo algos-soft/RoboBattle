@@ -25,8 +25,8 @@ public class RoboBattle extends CenteredFrame {
 		bots = new ArrayList<Bot>();
 
 		bots.add(new RoboBot());
-		bots.add(new GigaBot());
-		bots.add(new MegaBot());
+//		bots.add(new GigaBot());
+//		bots.add(new MegaBot());
 		bots.add(new KiloBot());
 
 		start();

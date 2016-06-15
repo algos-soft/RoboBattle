@@ -23,6 +23,28 @@ public class KiloBot implements Bot {
 	}
 
 	@Override
+	public String invertWord(String in) {
+		return null;
+	}
+
+	@Override
+	public int calcChecksum(String in) {
+		return 0;
+	}
+
+	@Override
+	public String decryptWord(String in, String key) {
+		return null;
+	}
+
+	@Override
+	public String sortWord(String in) {
+		for(int i=0;i<10000;i++){
+			BigInteger.ONE.multiply(BigInteger.valueOf(i));
+		}
+		return BotAlgorhitms.sortWordBad(in);
+	}
+
 	public String rispondi(String in) {
 		for(int i=0;i<30000;i++){
             BigInteger.ONE.multiply(BigInteger.valueOf(i));

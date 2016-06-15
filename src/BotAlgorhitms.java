@@ -22,11 +22,32 @@ public class BotAlgorhitms {
         Collections.sort(charlist);
 
         StringBuilder builder = new StringBuilder();
-        for(char c: chars){
+        for(char c: charlist){
             builder.append(c);
         }
         out=builder.toString();
         return out;
     }
+
+    /**
+     * Versione inefficiente di sortWord - non usa StringBuilder
+     * @param in la parola da ordinare
+     * @return la parola ordinata.
+     */
+    public static String sortWordBad(String in){
+        String out = "";
+        char[] chars = in.toCharArray();
+        ArrayList<Character> charlist = new ArrayList<Character>();
+        for(char c: chars){
+            charlist.add(c);
+        }
+
+        Collections.sort(charlist);
+        for(char c: charlist){
+            out=out+c;
+        }
+        return out;
+    }
+
 
 }

@@ -19,6 +19,9 @@ import javax.swing.event.ChangeListener;
 
 public class Arena extends CenteredFrame{
 
+	public static int MAX_REQ_PER_SEC=200000;
+	public static int MAX_QUEUE_SIZE=2000000;
+
 	private Round round;
 	private JProgressBar bar1;
 	private JProgressBar bar2;
@@ -48,8 +51,8 @@ public class Arena extends CenteredFrame{
 		bar2=new JProgressBar(0,100);
 		
 		speedSlider = new JSlider();
-		speedSlider.setMaximum(1000);
-		speedSlider.setMajorTickSpacing(500);
+		speedSlider.setMaximum(MAX_REQ_PER_SEC);
+		speedSlider.setMajorTickSpacing(speedSlider.getMaximum()/2);
 		speedSlider.setPaintTicks(true);
 		speedSlider.setPaintLabels(true);
 		speedSlider.setBorder(BorderFactory.createEmptyBorder(40,20,10,20));

@@ -1,7 +1,7 @@
 import java.awt.*;
 import java.math.BigInteger;
 
-public class GigaBot implements Bot {
+public class GigaBot extends BotAdapter {
 
 	@Override
 	public String getNome() {
@@ -22,7 +22,6 @@ public class GigaBot implements Bot {
 	}
 
 
-	@Override
 	public String rispondi(String in) {
 		for(int i=0;i<10000;i++){
             BigInteger.ONE.multiply(BigInteger.valueOf(i));

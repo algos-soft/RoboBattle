@@ -16,7 +16,7 @@ public class BotWorker extends SwingWorker<Void, Integer> {
 	private JProgressBar bar; // la progress bar della coda
 	private JLabel labelStatus; // label per lo status del bot
 	private List<String> queue; // la coda di stringhe
-	private int maxQueueSize = 1000; // max dimensione coda prima di overflow
+	private int maxQueueSize = Arena.MAX_QUEUE_SIZE; // max dimensione coda prima di overflow
 	private int richiestePerSecondo = 0; // numero di parole inviate al bot per
 											// secondo
 	private boolean finished;	// se l'elaborazione è terminata
@@ -62,28 +62,29 @@ public class BotWorker extends SwingWorker<Void, Integer> {
 			if (queue.size() > 0) {
 
 				String request = queue.remove(0);
-				String response1 = bot.inverti(request);
+				String response = bot.sortWord(request);
+				boolean ok=checkResponse(request, response);
 
-				int response2 = bot.checksum(request);
-				String response3 = bot.decrypt(request, "ABGHDEG");
+//				int response2 = bot.checksum(request);
+//				String response3 = bot.decrypt(request, "ABGHDEG");
+
 				// verifica la risposta
-				boolean ok=checkResponse(request, response1);
 				if(!ok){
 					totRisposteErrate++;
 				}
 				totRichiesteElaborate++;
 			}
 
-			// ogni 100 millis aggiunge un nuovo blocco di parole alla coda
+			// ogni 250 millis aggiunge un nuovo blocco di parole alla coda
 			long elapsedSinceLastBlockAdd = System.currentTimeMillis() - lastBlockAddMillis;
-			if (elapsedSinceLastBlockAdd > 100) {
-				addBlock(richiestePerSecondo / 10);
+			if (elapsedSinceLastBlockAdd > 10) {
+				addBlock(richiestePerSecondo / 4);
 				lastBlockAddMillis = System.currentTimeMillis();
 			}
 
 			// ogni tanto pubblica lo stato di avanzamento
 			long elapsedSinceLastUpdate = System.currentTimeMillis() - lastUpdateMillis;
-			if (elapsedSinceLastUpdate > 200) {
+			if (elapsedSinceLastUpdate > 250) {
 				publish(queue.size());
 				lastUpdateMillis = System.currentTimeMillis();
 			}
@@ -109,14 +110,19 @@ public class BotWorker extends SwingWorker<Void, Integer> {
 	}
 
 	/**
-	 * Verifica se una risposta � corretta.
+	 * Verifica se una risposta è corretta.
 	 * @param request la richiesta
 	 * @param response la risposta
 	 * @return true se corretta
 	 */
 	private boolean checkResponse(String request, String response) {
-		return true;
+		boolean ok=false;
+		if(response!=null){
+			ok=response.equals(request);
+		}
+		return ok;
 	}
+
 
 	@Override
 	protected void process(List<Integer> chunks) {
