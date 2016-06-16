@@ -3,6 +3,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -94,25 +95,38 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
 	 * @param results un oggetto JobResults da riempire con i risultati dei singoli task
 	 */
 	private void doJob(JobResults results){
+		long t1;
+		String request;
+		String response;
+		int sum=0;
 
 		if (arena.isCheck1()){
-			String request=getRandomString();
-			String response = bot.sortWord(request);
+			request=getRandomString();
+			t1 =System.nanoTime();
+			response = bot.sortWord(request);
+			results.put(Tests.SORT_WORD, System.nanoTime()-t1, request, response);
 		}
 
 		if (arena.isCheck2()){
-			String request=getRandomString();
-			String response = bot.invertWord(request);
+			request=getRandomString();
+			t1 =System.nanoTime();
+			response = bot.invertWord(request);
+			results.put(Tests.SORT_WORD, System.nanoTime()-t1, request, response);
+
 		}
 
 		if (arena.isCheck3()){
-			String request=getRandomString();
-			int sum = bot.calcChecksum(request);
-		}
+			request=getRandomString();
+			t1 =System.nanoTime();
+			sum = bot.calcChecksum(request);
+			results.put(Tests.SORT_WORD, System.nanoTime()-t1, request, sum);
 
+		}
 		if (arena.isCheck4()){
-			String request=getRandomString();
-			String response = bot.decryptWord(request, "ABCD");
+			request=getRandomString();
+			t1 =System.nanoTime();
+			response = bot.decryptWord(request, "ABCD");
+			sum = bot.calcChecksum(request);
 		}
 
 	}
@@ -197,6 +211,50 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
 		return bot;
 	}
 
+	/**
+	 * Classe che rappresenta i risultati di un test
+	 */
 	private class JobResults {
+
+		private ArrayList<Task> tasks;
+
+		public void put(Tests test, long nanos, Object request, Object response){
+			Task task = new Task(test, nanos, request, response);
+			tasks.add(task);
+		}
+	}
+
+	/**
+	 * Classe che rappresenta i risultati di un task
+	 */
+	private class Task{
+
+		private Tests test;
+		private long nanos;
+		private Object request;
+		private Object response;
+
+		public Task(Tests test, long nanos, Object request, Object response) {
+			this.test = test;
+			this.nanos = nanos;
+			this.request = request;
+			this.response = response;
+		}
+
+		public Tests getTest() {
+			return test;
+		}
+
+		public long getNanos() {
+			return nanos;
+		}
+
+		public Object getRequest() {
+			return request;
+		}
+
+		public Object getResponse() {
+			return response;
+		}
 	}
 }

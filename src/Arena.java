@@ -151,7 +151,6 @@ public class Arena extends CenteredFrame {
         });
         panel.add(bStart);
 
-
         return panel;
     }
 
