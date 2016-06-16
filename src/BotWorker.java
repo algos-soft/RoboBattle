@@ -48,10 +48,13 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
 		while (!stop) {
 
 			// fa eseguire una operazione al bot
+			JobResults results = new JobResults();
 			long jobStartNanos=System.nanoTime();
-			doJob();
+			doJob(results);
 			long jobLengthNano=System.nanoTime()-jobStartNanos;
 			totTimeNanos+=jobLengthNano;
+
+
 
 			//amplifica il tempo trascorso per dare importanza al tempo impiegato
 			//Thread.sleep(jobLengthNano/10000);
@@ -87,14 +90,23 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
 
 	/**
 	 * Esegue un job sul bot
+	 * @param results un oggetto JobResults da riempire con i risultati dei singoli task
 	 */
-	private void doJob(){
+	private void doJob(JobResults results){
 
 		//String request=getRandomString();
 		//String response = bot.sortWord(request);
 
 		String request=getRandomString();
 		String response = bot.invertWord(request);
+
+	}
+
+	/**
+	 * Controlla i risultati di un Job
+	 * @param results l'oggetto JobResults da controllare
+	 */
+	private void checkJob(JobResults results){
 
 	}
 
@@ -170,4 +182,6 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
 		return bot;
 	}
 
+	private class JobResults {
+	}
 }
