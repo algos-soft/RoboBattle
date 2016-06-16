@@ -30,7 +30,7 @@ public class BotAlgorhitms {
     }
 
     /**
-     * Versione inefficiente di sortWord - non usa StringBuilder
+     * Versione inefficiente di sortWord (non usa StringBuilder)
      * @param in la parola da ordinare
      * @return la parola ordinata.
      */
@@ -48,6 +48,39 @@ public class BotAlgorhitms {
         }
         return out;
     }
+
+
+    /**
+     * Inverte le lettere di una parola.
+     * @param in la parola in ingresso
+     * @return la parola scritta al contrario.
+     */
+    public static String invertWord(String in){
+        StringBuilder sb = new StringBuilder(in);
+        return sb.reverse().toString();
+    }
+
+    /**
+     * Inverte le lettere di una parola - versione inefficiente
+     * @param in la parola in ingresso
+     * @return la parola scritta al contrario.
+     */
+    public static String invertWordBad(String in){
+        String out = "";
+        char[] chars = in.toCharArray();
+        ArrayList<Character> charlist = new ArrayList<Character>();
+        for(char c: chars){
+            charlist.add(c);
+        }
+
+        for(int i=0; i<charlist.size(); i++){
+            char c = charlist.get(charlist.size()-i-1);
+            out = out+c;
+        }
+
+        return out;
+    }
+
 
 
 }

@@ -89,8 +89,13 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
 	 * Esegue un job sul bot
 	 */
 	private void doJob(){
+
+		//String request=getRandomString();
+		//String response = bot.sortWord(request);
+
 		String request=getRandomString();
-		String response = bot.sortWord(request);
+		String response = bot.invertWord(request);
+
 	}
 
 	/**

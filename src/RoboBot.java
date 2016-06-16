@@ -24,7 +24,7 @@ public class RoboBot implements Bot {
 
 	@Override
 	public String invertWord(String in) {
-		return "";
+		return BotAlgorhitms.invertWord(in);
 	}
 
 	@Override

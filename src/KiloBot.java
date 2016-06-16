@@ -24,7 +24,7 @@ public class KiloBot implements Bot {
 
 	@Override
 	public String invertWord(String in) {
-		return null;
+		return BotAlgorhitms.invertWordBad(in);
 	}
 
 	@Override
