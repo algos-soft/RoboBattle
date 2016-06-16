@@ -90,15 +90,30 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
 
 	/**
 	 * Esegue un job sul bot
+	 * esegue solo i task abilitati
 	 * @param results un oggetto JobResults da riempire con i risultati dei singoli task
 	 */
 	private void doJob(JobResults results){
 
-		//String request=getRandomString();
-		//String response = bot.sortWord(request);
+		if (arena.isCheck1()){
+			String request=getRandomString();
+			String response = bot.sortWord(request);
+		}
 
-		String request=getRandomString();
-		String response = bot.invertWord(request);
+		if (arena.isCheck2()){
+			String request=getRandomString();
+			String response = bot.invertWord(request);
+		}
+
+		if (arena.isCheck3()){
+			String request=getRandomString();
+			int sum = bot.calcChecksum(request);
+		}
+
+		if (arena.isCheck4()){
+			String request=getRandomString();
+			String response = bot.decryptWord(request, "ABCD");
+		}
 
 	}
 
