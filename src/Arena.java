@@ -91,8 +91,8 @@ public class Arena extends CenteredFrame {
         pBots.add(new BotComponent(getBot2()));
         pBots.add(bar1);
         pBots.add(bar2);
-        pBots.add(new CompStatus(labelStatus1, worker1));
-        pBots.add(new CompStatus(labelStatus2, worker2));
+        pBots.add(new CompStatus(labelStatus1, round.getBot1()));
+        pBots.add(new CompStatus(labelStatus2, round.getBot2()));
 
         speedSlider.setValue(DEFAULT_REQ_PER_SESSION / 2);
         updateSliderText();
@@ -109,21 +109,35 @@ public class Arena extends CenteredFrame {
      * Componente con label status e bottone info
      */
     private class CompStatus extends JPanel{
-        public CompStatus(JLabel label, final BotWorker worker) {
+        public CompStatus(JLabel label, final Bot bot) {
             BoxLayout layout = new BoxLayout(this, BoxLayout.X_AXIS);
             setLayout(layout);
             add(label);
 
-            JButton bot = new JButton("info");
-            bot.addActionListener(new ActionListener() {
+            JButton button = new JButton("info");
+            button.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    //JobResults res = worker.getSessionResults();
-
+                    BotWorker worker=null;
+                    if(bot.equals(round.getBot1())){
+                        worker=worker1;
+                    }
+                    if(bot.equals(round.getBot2())){
+                        worker=worker2;
+                    }
+                    if(worker!=null){
+                        //String info = worker.getSessionInfo();
+                        JOptionPane pane = new JOptionPane("Qui le informazioni");
+                        JDialog dialog = new JDialog();
+                        dialog.add(pane);
+                        dialog.setModal(false);
+                        dialog.pack();
+                        dialog.setVisible(true);
+                    }
                 }
             });
 
-            add(new JButton("info"));
+            add(button);
             label.setPreferredSize(new Dimension(220, 20));
             label.setMaximumSize(new Dimension(1000,10));
         }
