@@ -16,6 +16,7 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
     private int totRequests;    // numero totale di richieste da inviare in una sessione di test
     private Random random = new Random();    // random generator
     private boolean finished;    // se l'elaborazione è terminata
+    private JobResults sessionResults;
 
 
     public BotWorker(final Arena arena, Bot bot, JProgressBar bar, JLabel labelStatus) {
@@ -46,8 +47,8 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
         long lastUpdateMillis = 0;
         long totTimeNanos = 0;
 
-        // mantiene i risultati globali
-        JobResults globalResults = new JobResults();
+        // mantiene i risultati globali della sessione di run
+        sessionResults = new JobResults();
 
         while (!stop) {
 
@@ -69,11 +70,15 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
                 Tests test=task.getTest();
                 long nanos=task.getNanos();
                 boolean valid=task.isValid();
+
                 // aggiunge il tempo ai risultati globali
-                globalResults.addNanos(test, nanos);
-                // al primo task non valido mette tutto il test non valido
+                sessionResults.addNanos(test, nanos);
+
+                // se non valido incrementa il conteggio degli errori.
+                // al primo task non valido mette tutto il test non valido.
                 if (!valid) {
-                    globalResults.getTask(test).setValid(false);
+                    //sessionResults.addErrorCount();
+                    sessionResults.getTask(test).setValid(false);
                 }
             }
 
@@ -152,30 +157,6 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
 
     }
 
-    /**
-     * Controlla i risultati di un Job
-     *
-     * @param results l'oggetto JobResults da controllare
-     */
-    private void checkJob(JobResults results) {
-
-    }
-
-    /**
-     * Verifica se una risposta è corretta.
-     *
-     * @param request  la richiesta
-     * @param response la risposta
-     * @return true se corretta
-     */
-    private boolean checkResponse(String request, String response) {
-        boolean ok = false;
-        if (response != null) {
-            ok = response.equals(request);
-        }
-        return ok;
-    }
-
 
     @Override
     protected void process(List<JobStatus> chunks) {
@@ -184,7 +165,7 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
             bar.setValue(percent);
             bar.setString(percent + "%");
             String snum = NumberFormat.getIntegerInstance().format(+s.getNumRequests());
-            labelStatus.setText("tot: " + snum + " - CPU time: " + s.getElapsedString());
+            labelStatus.setText("tot: " + snum + " - CPU time: " + s.getElapsedStringSecs());
 
             Color c;
             if (percent < 75) {
@@ -222,6 +203,22 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
         return bot;
     }
 
+    public JobResults getSessionResults() {
+        return sessionResults;
+    }
+
+    /**
+     * Ritorna un testo con i risultati della sessione.
+     * @return il testo
+     */
+    public String getSessionInfo(){
+        String text="";
+        JobResults results = getSessionResults();
+        for(Task task : results.getTasks()){
+            task.getNanos();
+        }
+        return text;
+    }
 
     /**
      * Classe che rappresenta i risultati di un test

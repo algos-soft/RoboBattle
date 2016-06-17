@@ -18,10 +18,9 @@ public class JobStatus {
 		return elapsedMillis;
 	}
 
-	public String getElapsedString(){
+	public String getElapsedStringSecs(){
 		long intero = elapsedMillis/1000;
 		long resto = elapsedMillis % 1000;
 		return intero+":"+resto;
-
 	}
 }

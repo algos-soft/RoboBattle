@@ -1,8 +1,4 @@
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.GridLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
@@ -95,8 +91,8 @@ public class Arena extends CenteredFrame {
         pBots.add(new BotComponent(getBot2()));
         pBots.add(bar1);
         pBots.add(bar2);
-        pBots.add(labelStatus1);
-        pBots.add(labelStatus2);
+        pBots.add(new CompStatus(labelStatus1, worker1));
+        pBots.add(new CompStatus(labelStatus2, worker2));
 
         speedSlider.setValue(DEFAULT_REQ_PER_SESSION / 2);
         updateSliderText();
@@ -108,6 +104,31 @@ public class Arena extends CenteredFrame {
 
         return panBattle;
     }
+
+    /**
+     * Componente con label status e bottone info
+     */
+    private class CompStatus extends JPanel{
+        public CompStatus(JLabel label, final BotWorker worker) {
+            BoxLayout layout = new BoxLayout(this, BoxLayout.X_AXIS);
+            setLayout(layout);
+            add(label);
+
+            JButton bot = new JButton("info");
+            bot.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    //JobResults res = worker.getSessionResults();
+
+                }
+            });
+
+            add(new JButton("info"));
+            label.setPreferredSize(new Dimension(220, 20));
+            label.setMaximumSize(new Dimension(1000,10));
+        }
+    }
+
 
     private void updateSliderText() {
         String snum = NumberFormat.getIntegerInstance().format(+speedSlider.getValue());
