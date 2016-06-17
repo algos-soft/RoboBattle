@@ -417,6 +417,7 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
         private Object response;
         private boolean valid;
         private String error;
+        private int errCount=0;
 
         public Task(Tests test, long nanos, Object request, Object response) {
             this.test = test;
@@ -459,6 +460,10 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
 
         public void addNanos(long nanos) {
             this.nanos = this.nanos + nanos;
+        }
+
+        public void addErrCount(){
+            this.errCount=this.errCount+1;
         }
 
     }
