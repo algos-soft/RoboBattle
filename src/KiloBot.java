@@ -24,7 +24,7 @@ public class KiloBot implements Bot {
 
 	@Override
 	public String invertWord(String in) {
-		return BotAlgorhitms.invertWordBad(in);
+		return BotAlgorhitms.invertWordErr(in);
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class KiloBot implements Bot {
 
 	@Override
 	public String sortWord(String in) {
-		return BotAlgorhitms.sortWordBad(in);
+		return BotAlgorhitms.sortWordSlow(in);
 	}
 
 	public String rispondi(String in) {

@@ -24,7 +24,7 @@ public class Arena extends CenteredFrame {
     private JLabel labelSpeed;
     //	private JLabel labelWinner;
     private boolean running;
-    private boolean finished;
+    private boolean stopped;
 
     private BotWorker worker1;
     private BotWorker worker2;
@@ -40,7 +40,6 @@ public class Arena extends CenteredFrame {
     public Arena(Round round) {
         super();
         this.round = round;
-        //setPreferredSize(new Dimension(600,400));
 
         setTitle(getBot1().getNome() + " vs. " + getBot1().getNome());
 
@@ -105,7 +104,7 @@ public class Arena extends CenteredFrame {
         panBattle.add(pBots);
         panBattle.add(labelSpeed);
         panBattle.add(speedSlider);
-		panBattle.add(creaPanTest());
+        panBattle.add(creaPanTest());
 
         return panBattle;
     }
@@ -129,22 +128,16 @@ public class Arena extends CenteredFrame {
 
             @Override
             public void actionPerformed(ActionEvent arg0) {
-                if (!(finished | running)) {
+                if (!running) {
+                    running = true;
+                    stopped=false;
                     bStart.setText("Stop");
                     worker1 = new BotWorker(Arena.this, getBot1(), bar1, labelStatus1);
                     worker2 = new BotWorker(Arena.this, getBot2(), bar2, labelStatus2);
                     worker1.execute();
                     worker2.execute();
-                    running = true;
                 } else {
-                    if (!finished) {
-                        running = false;
-                        finished = true;
-                        bStart.setText("Close");
-
-                    } else {
-                        dispose();
-                    }
+                    stopped=true;
                 }
 
             }
@@ -153,6 +146,34 @@ public class Arena extends CenteredFrame {
 
         return panel;
     }
+
+    /**
+     * Invocato ogni volta che un worker finisce il suo lavoro
+     */
+    public void workerFinished(BotWorker worker) {
+
+        // se entrambi i worker sono terminati la sfida è terminata
+        if (worker1.isFinished()) {
+            if (worker2.isFinished()) {
+                running = false;
+                bStart.setText("Start");
+            }
+        }
+
+//		// se è un overflow assegna il trofeo all'altro bot
+//		if(worker.isOverflow()){
+//			if(winner==null){
+//				if(worker.equals(worker1)){
+//					winner=worker2.getBot();
+//				}else{
+//					winner=worker1.getBot();
+//				}
+//				labelWinner.setText("Winner: "+winner.getNome());
+//			}
+//		}
+
+    }
+
 
     /**
      * Pannello con i test
@@ -179,10 +200,9 @@ public class Arena extends CenteredFrame {
     }
 
 
-    public boolean isFinished() {
-        return finished;
+    public boolean isStopped() {
+        return stopped;
     }
-
 
     private Bot getBot1() {
         return round.getBot1();
@@ -193,33 +213,6 @@ public class Arena extends CenteredFrame {
     }
 
 
-    /**
-     * Invocato ogni volta che un worker finisce il suo lavoro
-     */
-    public void workerFinished(BotWorker worker) {
-
-        // se entrambi i worker sono terminati la sfida è terminata
-        if (worker1.isFinished()) {
-            if (worker2.isFinished()) {
-                running = false;
-                finished = true;
-                bStart.setText("Close");
-            }
-        }
-
-//		// se è un overflow assegna il trofeo all'altro bot
-//		if(worker.isOverflow()){
-//			if(winner==null){
-//				if(worker.equals(worker1)){
-//					winner=worker2.getBot();
-//				}else{
-//					winner=worker1.getBot();
-//				}
-//				labelWinner.setText("Winner: "+winner.getNome());
-//			}
-//		}
-
-    }
 
     public Bot getWinner() {
         return winner;
