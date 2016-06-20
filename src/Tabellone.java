@@ -12,6 +12,17 @@ public class Tabellone extends JTable {
 
         setModel(new TabelloneModel(battle));
 
+        setDefaultRenderer(Bot.class, new BotCompRendererer());
+
+        setRowHeight(100);
+
+        getColumnModel().getColumn(0).setPreferredWidth(300);
+        int numCols=getColumnModel().getColumnCount();
+//        for(int i=0; i<numCols-1; i++){
+//            getColumnModel().getColumn(i+1).setPreferredWidth(200);
+//
+//        }
+
     }
 
 
