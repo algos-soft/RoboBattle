@@ -19,14 +19,20 @@ public class RoboBattle extends CenteredFrame {
 		//setPreferredSize(new Dimension(400, 200));
 		
 		panRounds=creaPanRounds();
-		add(panRounds);
+		//add(panRounds);
+
+		Tabellone tabellone = new Tabellone(this);
+		JScrollPane scroller = new JScrollPane(tabellone);
+		tabellone.setFillsViewportHeight(true);
+		add(scroller);
+
 		add(creaPanComandi(), BorderLayout.PAGE_END);
 		
 		bots = new ArrayList<Bot>();
 
 		bots.add(new RoboBot());
-//		bots.add(new GigaBot());
-//		bots.add(new MegaBot());
+		bots.add(new GigaBot());
+		bots.add(new MegaBot());
 		bots.add(new KiloBot());
 
 		start();
@@ -62,8 +68,8 @@ public class RoboBattle extends CenteredFrame {
 		}
 
 	}
-	
-	
+
+
 	/**
 	 * Crea il pannello dei round.
 	 * @return il pannello dei round
@@ -124,6 +130,15 @@ public class RoboBattle extends CenteredFrame {
 		if (risp == JOptionPane.YES_OPTION) {
 			System.exit(0);
 		}
+	}
+
+
+	public ArrayList<Bot> getBots() {
+		return bots;
+	}
+
+	public void setBots(ArrayList<Bot> bots) {
+		this.bots = bots;
 	}
 
 	public static void main(String[] args) {
