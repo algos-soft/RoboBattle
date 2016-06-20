@@ -1,5 +1,4 @@
-import java.awt.BorderLayout;
-import java.awt.Component;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -16,7 +15,7 @@ public class RoboBattle extends CenteredFrame {
 	public RoboBattle() {
 		super();
 		setTitle("RoboBattle");
-		//setPreferredSize(new Dimension(400, 200));
+		setPreferredSize(new Dimension(700, 560));
 		
 		panRounds=creaPanRounds();
 		//add(panRounds);
