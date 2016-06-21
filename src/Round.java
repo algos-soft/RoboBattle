@@ -30,7 +30,7 @@ public class Round extends JPanel{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				final Arena b = new Arena(Round.this);
+				final Arena b = new Arena(null);
 				b.pack();
 				b.setVisible(true);
 

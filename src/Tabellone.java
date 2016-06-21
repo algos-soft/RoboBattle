@@ -9,18 +9,20 @@ import java.awt.*;
 public class Tabellone extends JTable {
 
     private RoboBattle battle;
+    private final TabelloneModel model;
+
 
     public Tabellone(final RoboBattle battle) {
         this.battle = battle;
 
-        setModel(new TabelloneModel(battle));
+        model = new TabelloneModel(battle);
+        setModel(model);
 
         setDefaultRenderer(Bot.class, new BotCompRendererer());
-        setDefaultRenderer(JButton.class, new ButtonCompRendererer());
 
         setRowHeight(100);
 
-        setIntercellSpacing(new Dimension(20,20));
+        setIntercellSpacing(new Dimension(20, 20));
 
         //setRowSelectionAllowed(false);
 
@@ -33,15 +35,14 @@ public class Tabellone extends JTable {
 //        }
 
 
-        getSelectionModel().addListSelectionListener(new ListSelectionListener(){
+        getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent event) {
-                boolean enable=getSelectedRows().length==1;
+                boolean enable = getSelectedRows().length == 1;
                 battle.getbStart().setEnabled(enable);
             }
         });
 
     }
-
 
 
 

@@ -9,13 +9,11 @@ public class TabelloneModel extends AbstractTableModel {
     private RoboBattle battle;
     private int totColumns;
     private int botsColumn;
-    private  int buttonsColumn;
 
     public TabelloneModel(RoboBattle battle) {
         this.battle = battle;
-        totColumns=Tests.values().length+2;
+        totColumns=Tests.values().length+1;
         botsColumn=0;
-        buttonsColumn=totColumns-1;
     }
 
     @Override
@@ -25,7 +23,7 @@ public class TabelloneModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return Tests.values().length + 2;
+        return totColumns;
     }
 
     @Override
@@ -35,10 +33,6 @@ public class TabelloneModel extends AbstractTableModel {
             return battle.getBots().get(row);
         }
 
-        if (col == buttonsColumn) {
-            return new JButton("Start!");
-        }
-
         return "ciao";
     }
 
@@ -46,10 +40,6 @@ public class TabelloneModel extends AbstractTableModel {
     public String getColumnName(int column) {
         if (column == botsColumn) {
             return "Bot";
-        }
-
-        if (column == buttonsColumn) {
-            return "";
         }
 
         Tests test=Tests.values()[column - 1];
@@ -62,10 +52,6 @@ public class TabelloneModel extends AbstractTableModel {
 
         if (col == botsColumn) {
             return Bot.class;
-        }
-
-        if (col == buttonsColumn) {
-            return JButton.class;
         }
 
         return String.class;

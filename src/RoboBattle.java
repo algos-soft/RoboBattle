@@ -12,6 +12,7 @@ public class RoboBattle extends CenteredFrame {
 	private ArrayList<Round> rounds;
 	private JPanel panRounds;
 	private JButton bStart;
+	private final Tabellone tabellone;
 
 	public RoboBattle() {
 		super();
@@ -21,7 +22,7 @@ public class RoboBattle extends CenteredFrame {
 		panRounds=creaPanRounds();
 		//add(panRounds);
 
-		Tabellone tabellone = new Tabellone(this);
+		tabellone = new Tabellone(this);
 		JScrollPane scroller = new JScrollPane(tabellone);
 		tabellone.setFillsViewportHeight(true);
 		add(scroller);
@@ -95,7 +96,10 @@ public class RoboBattle extends CenteredFrame {
 		bStart.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-
+				Bot bot = getSelectedBot();
+				if(bot != null){
+					new Arena(bot);
+				}
 			}
 		});
 		panel.add(bStart);
@@ -113,8 +117,18 @@ public class RoboBattle extends CenteredFrame {
 
 		return panel;
 	}
-	
-	
+
+
+	private Bot getSelectedBot() {
+		Bot bot=null;
+		int row = tabellone.getSelectedRow();
+		if (row >= 0) {
+			bot = getBots().get(row);
+		}
+		return bot;
+	}
+
+
 	private void esci() {
 		int risp = JOptionPane.showConfirmDialog(this, "Sei sicuro?", "Uscita",
 				JOptionPane.YES_NO_OPTION);
@@ -140,6 +154,7 @@ public class RoboBattle extends CenteredFrame {
 	public void setbStart(JButton bStart) {
 		this.bStart = bStart;
 	}
+
 
 	public static void main(String[] args) {
 		RoboBattle b = new RoboBattle();

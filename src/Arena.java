@@ -11,7 +11,7 @@ public class Arena extends CenteredFrame {
 
     public static int DEFAULT_REQ_PER_SESSION = 10000000;
 
-    private Round round;
+    private Bot bot;
     private JProgressBar bar1;
     private JProgressBar bar2;
     private JLabel labelStatus1;
@@ -33,11 +33,11 @@ public class Arena extends CenteredFrame {
     private JCheckBox check3;
     private JCheckBox check4;
 
-    public Arena(Round round) {
+    public Arena(Bot bot) {
         super();
-        this.round = round;
+        this.bot=bot;
 
-        setTitle(getBot1().getNome() + " vs. " + getBot1().getNome());
+        setTitle(bot.getNome());
 
         bar1 = new JProgressBar(0, 100);
         bar2 = new JProgressBar(0, 100);
@@ -76,6 +76,9 @@ public class Arena extends CenteredFrame {
         add(creaPanBattle());
         add(creaPanComandi(), BorderLayout.PAGE_END);
 
+        pack();
+        setVisible(true);
+
     }
 
 
@@ -87,12 +90,10 @@ public class Arena extends CenteredFrame {
 
         JPanel pBots = new JPanel();
         pBots.setLayout(new GridLayout(0, 2, 10, 10));
-        pBots.add(new BotComponent(getBot1()));
-        pBots.add(new BotComponent(getBot2()));
+        pBots.add(new BotComponent(bot));
         pBots.add(bar1);
         pBots.add(bar2);
-        pBots.add(new CompStatus(labelStatus1, round.getBot1()));
-        pBots.add(new CompStatus(labelStatus2, round.getBot2()));
+        pBots.add(new CompStatus(labelStatus1, bot));
 
         speedSlider.setValue(DEFAULT_REQ_PER_SESSION / 2);
         updateSliderText();
@@ -119,12 +120,6 @@ public class Arena extends CenteredFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     BotWorker worker=null;
-                    if(bot.equals(round.getBot1())){
-                        worker=worker1;
-                    }
-                    if(bot.equals(round.getBot2())){
-                        worker=worker2;
-                    }
                     if(worker!=null){
                         //String info = worker.getSessionInfo();
                         JOptionPane pane = new JOptionPane("Qui le informazioni");
@@ -167,8 +162,7 @@ public class Arena extends CenteredFrame {
                     running = true;
                     stopped=false;
                     bStart.setText("Stop");
-                    worker1 = new BotWorker(Arena.this, getBot1(), bar1, labelStatus1);
-                    worker2 = new BotWorker(Arena.this, getBot2(), bar2, labelStatus2);
+                    worker1 = new BotWorker(Arena.this, bot, bar1, labelStatus1);
                     worker1.execute();
                     worker2.execute();
                 } else {
@@ -238,15 +232,6 @@ public class Arena extends CenteredFrame {
     public boolean isStopped() {
         return stopped;
     }
-
-    private Bot getBot1() {
-        return round.getBot1();
-    }
-
-    private Bot getBot2() {
-        return round.getBot2();
-    }
-
 
 
     public Bot getWinner() {
