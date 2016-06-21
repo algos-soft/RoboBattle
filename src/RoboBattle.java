@@ -11,6 +11,7 @@ public class RoboBattle extends CenteredFrame {
 	private ArrayList<Bot> bots;
 	private ArrayList<Round> rounds;
 	private JPanel panRounds;
+	private JButton bStart;
 
 	public RoboBattle() {
 		super();
@@ -88,25 +89,16 @@ public class RoboBattle extends CenteredFrame {
 	private Component creaPanComandi() {
 		JPanel panel = new JPanel();
 		panel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-		
-		JButton bNewBattle = new JButton("Nuova battaglia");
-		bNewBattle.addActionListener(new ActionListener() {
 
+		bStart = new JButton("Start");
+		bStart.setEnabled(false);
+		bStart.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				int risp = JOptionPane.showConfirmDialog(RoboBattle.this, "Sei sicuro?", "Nuova battaglia",
-						JOptionPane.YES_NO_OPTION);
 
-				if (risp == JOptionPane.YES_OPTION) {
-					start();
-					//SwingUtilities.updateComponentTreeUI(RoboBattle.this);
-					RoboBattle.this.invalidate();
-					RoboBattle.this.validate();
-					RoboBattle.this.repaint();
-				}
 			}
 		});
-		panel.add(bNewBattle);
+		panel.add(bStart);
 
 		JButton bEsci = new JButton("Esci");
 		bEsci.addActionListener(new ActionListener() {
@@ -138,6 +130,14 @@ public class RoboBattle extends CenteredFrame {
 
 	public void setBots(ArrayList<Bot> bots) {
 		this.bots = bots;
+	}
+
+	public JButton getbStart() {
+		return bStart;
+	}
+
+	public void setbStart(JButton bStart) {
+		this.bStart = bStart;
 	}
 
 	public static void main(String[] args) {
