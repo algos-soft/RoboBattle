@@ -110,6 +110,7 @@ public class RoboBattle extends CenteredFrame {
 		});
 		panel.add(bEsci);
 
+
 		return panel;
 	}
 	
