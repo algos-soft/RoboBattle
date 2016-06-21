@@ -1,3 +1,4 @@
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -6,9 +7,15 @@ import javax.swing.table.AbstractTableModel;
 public class TabelloneModel extends AbstractTableModel {
 
     private RoboBattle battle;
+    private int totColumns;
+    private int botsColumn;
+    private  int buttonsColumn;
 
     public TabelloneModel(RoboBattle battle) {
         this.battle = battle;
+        totColumns=Tests.values().length+2;
+        botsColumn=0;
+        buttonsColumn=totColumns-1;
     }
 
     @Override
@@ -18,40 +25,49 @@ public class TabelloneModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return Tests.values().length + 1;
+        return Tests.values().length + 2;
     }
 
     @Override
     public Object getValueAt(int row, int col) {
-        if (col == 0) {
-            Bot bot = battle.getBots().get(row);
-            return bot;
-        } else {
-            return "ciao";
+
+        if (col == botsColumn) {
+            return battle.getBots().get(row);
         }
+
+        if (col == buttonsColumn) {
+            return new JButton("Start!");
+        }
+
+        return "ciao";
     }
 
     @Override
     public String getColumnName(int column) {
-        if (column == 0) {
+        if (column == botsColumn) {
             return "Bot";
-        } else {
-            return Tests.values()[column - 1].getTestName();
         }
+
+        if (column == buttonsColumn) {
+            return "";
+        }
+
+        Tests test=Tests.values()[column - 1];
+        return test.getTestName();
+
     }
 
     @Override
-    public Class<?> getColumnClass(int columnIndex) {
-        Class clazz;
-        switch (columnIndex) {
-            case 0:
-                clazz = Bot.class;
-                break;
-            default:
-                clazz = String.class;
-                break;
+    public Class<?> getColumnClass(int col) {
 
+        if (col == botsColumn) {
+            return Bot.class;
         }
-        return clazz;
+
+        if (col == buttonsColumn) {
+            return JButton.class;
+        }
+
+        return String.class;
     }
 }
