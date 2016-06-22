@@ -13,9 +13,7 @@ public class Arena extends CenteredFrame {
 
     private Bot bot;
     private JProgressBar bar1;
-    private JProgressBar bar2;
     private JLabel labelStatus1;
-    private JLabel labelStatus2;
     private JSlider speedSlider;
     private JLabel labelSpeed;
     //	private JLabel labelWinner;
@@ -23,7 +21,6 @@ public class Arena extends CenteredFrame {
     private boolean stopped;
 
     private BotWorker worker1;
-    private BotWorker worker2;
 
     private JButton bStart;
 
@@ -40,7 +37,6 @@ public class Arena extends CenteredFrame {
         setTitle(bot.getNome());
 
         bar1 = new JProgressBar(0, 100);
-        bar2 = new JProgressBar(0, 100);
 
         speedSlider = new JSlider();
         speedSlider.setMaximum(DEFAULT_REQ_PER_SESSION);
@@ -57,7 +53,6 @@ public class Arena extends CenteredFrame {
         });
 
         labelStatus1 = new JLabel();
-        labelStatus2 = new JLabel();
 
         labelSpeed = new JLabel("", SwingConstants.CENTER);
         labelSpeed.setAlignmentX(CENTER_ALIGNMENT);
@@ -73,7 +68,8 @@ public class Arena extends CenteredFrame {
 
         bStart = new JButton("Start!");
 
-        add(creaPanBattle());
+        add(new BotComponent(bot), BorderLayout.PAGE_START);
+        add(creaCompTests());
         add(creaPanComandi(), BorderLayout.PAGE_END);
 
         pack();
@@ -81,9 +77,26 @@ public class Arena extends CenteredFrame {
 
     }
 
+    /**
+     * Crea e ritorna il componente grafico con i test
+     */
+    private Component creaCompTests(){
+        JPanel panTests = new JPanel();
+        BoxLayout layout = new BoxLayout(panTests, BoxLayout.Y_AXIS);
+        panTests.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
+        panTests.setLayout(layout);
+
+        for(Tests test : Tests.values()){
+            Component comp = new BotTestComponent(bot, test);
+            panTests.add(comp);
+        }
+
+        return panTests;
+    }
 
     private Component creaPanBattle() {
         JPanel panBattle = new JPanel();
+        panBattle.setBackground(Color.YELLOW);
         panBattle.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         BoxLayout layout = new BoxLayout(panBattle, BoxLayout.Y_AXIS);
         panBattle.setLayout(layout);
@@ -92,7 +105,6 @@ public class Arena extends CenteredFrame {
         pBots.setLayout(new GridLayout(0, 2, 10, 10));
         pBots.add(new BotComponent(bot));
         pBots.add(bar1);
-        pBots.add(bar2);
         pBots.add(new CompStatus(labelStatus1, bot));
 
         speedSlider.setValue(DEFAULT_REQ_PER_SESSION / 2);
@@ -160,13 +172,12 @@ public class Arena extends CenteredFrame {
             public void actionPerformed(ActionEvent arg0) {
                 if (!running) {
                     running = true;
-                    stopped=false;
+                    stopped = false;
                     bStart.setText("Stop");
                     worker1 = new BotWorker(Arena.this, bot, bar1, labelStatus1);
                     worker1.execute();
-                    worker2.execute();
                 } else {
-                    stopped=true;
+                    stopped = true;
                 }
 
             }
@@ -183,10 +194,8 @@ public class Arena extends CenteredFrame {
 
         // se entrambi i worker sono terminati la sfida è terminata
         if (worker1.isFinished()) {
-            if (worker2.isFinished()) {
-                running = false;
-                bStart.setText("Start");
-            }
+            running = false;
+            bStart.setText("Start");
         }
 
 //		// se è un overflow assegna il trofeo all'altro bot
