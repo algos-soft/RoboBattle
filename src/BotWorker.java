@@ -9,8 +9,8 @@ import java.util.Random;
 
 public class BotWorker extends SwingWorker<Void, JobStatus> {
 
-    private Arena arena; // la Battle di riferimento
-    private Bot bot; // il bot impegnato
+    private Bot bot; // il bot impegnato;
+    private BotTestComponent testComp;  // il componente grafico di testing
     private JProgressBar bar; // la progress bar della coda
     private JLabel labelStatus; // label per lo status del bot
     private int totRequests;    // numero totale di richieste da inviare in una sessione di test
@@ -19,23 +19,25 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
     private JobResults sessionResults;
 
 
-    public BotWorker(final Arena arena, Bot bot, JProgressBar bar, JLabel labelStatus) {
+    public BotWorker(BotTestComponent testComp, Bot bot, JProgressBar bar, JLabel labelStatus) {
         super();
-        this.arena = arena;
+        this.testComp=testComp;
         this.bot = bot;
         this.bar = bar;
         this.labelStatus = labelStatus;
 
         bar.setStringPainted(true);
 
-        totRequests = arena.getSpeedSlider().getValue();
-        arena.getSpeedSlider().addChangeListener(new ChangeListener() {
+//        totRequests = arena.getSpeedSlider().getValue();
+//        arena.getSpeedSlider().addChangeListener(new ChangeListener() {
+//
+//            @Override
+//            public void stateChanged(ChangeEvent e) {
+//                totRequests = arena.getSpeedSlider().getValue();
+//            }
+//        });
 
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                totRequests = arena.getSpeedSlider().getValue();
-            }
-        });
+        totRequests=20000;
 
     }
 
@@ -101,7 +103,7 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
             }
 
             // se la battaglia è stoppata, si ferma
-            if (arena.isStopped()) {
+            if (testComp.isStopped()) {
                 finished = true;
                 stop = true;
             }
