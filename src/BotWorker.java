@@ -20,17 +20,16 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
         super();
         this.testComp=testComp;
 
+        final JSlider slider = this.testComp.getArena().getSpeedSlider();
+        totRequests = slider.getValue();
+        slider.addChangeListener(new ChangeListener() {
 
-//        totRequests = arena.getSpeedSlider().getValue();
-//        arena.getSpeedSlider().addChangeListener(new ChangeListener() {
-//
-//            @Override
-//            public void stateChanged(ChangeEvent e) {
-//                totRequests = arena.getSpeedSlider().getValue();
-//            }
-//        });
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                totRequests = slider.getValue();
+            }
+        });
 
-        totRequests=20000;
 
     }
 
@@ -162,8 +161,10 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
             int percent = (int) (100 * s.getNumRequests() / totRequests);
             getBar().setValue(percent);
             getBar().setString(percent + "%");
+
             String snum = NumberFormat.getIntegerInstance().format(+s.getNumRequests());
-            getLabelStatus().setText("tot: " + snum + " - CPU time: " + s.getElapsedStringSecs());
+            testComp.getIterField().setText(snum);
+            testComp.getTimeField().setText(s.getElapsedStringSecs());
 
             Color c;
             if (percent < 75) {

@@ -16,19 +16,9 @@ public class Arena extends CenteredFrame {
     private JLabel labelStatus1;
     private JSlider speedSlider;
     private JLabel labelSpeed;
-    //	private JLabel labelWinner;
-    private boolean running;
-    private boolean stopped;
-
-    private BotWorker worker1;
 
     private JButton bStart;
 
-    private Bot winner;
-    private JCheckBox check1;
-    private JCheckBox check2;
-    private JCheckBox check3;
-    private JCheckBox check4;
 
     public Arena(Bot bot) {
         super();
@@ -38,19 +28,6 @@ public class Arena extends CenteredFrame {
 
         bar1 = new JProgressBar(0, 100);
 
-        speedSlider = new JSlider();
-        speedSlider.setMaximum(DEFAULT_REQ_PER_SESSION);
-        speedSlider.setMajorTickSpacing(speedSlider.getMaximum() / 2);
-        speedSlider.setPaintTicks(true);
-        speedSlider.setPaintLabels(true);
-        speedSlider.setBorder(BorderFactory.createEmptyBorder(40, 20, 10, 20));
-        speedSlider.addChangeListener(new ChangeListener() {
-
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                updateSliderText();
-            }
-        });
 
         labelStatus1 = new JLabel();
 
@@ -87,7 +64,7 @@ public class Arena extends CenteredFrame {
         panTests.setLayout(layout);
 
         for(Tests test : Tests.values()){
-            Component comp = new BotTestComponent(bot, test);
+            Component comp = new BotTestComponent(bot, test, this);
             panTests.add(comp);
         }
 
@@ -113,7 +90,6 @@ public class Arena extends CenteredFrame {
         panBattle.add(pBots);
         panBattle.add(labelSpeed);
         panBattle.add(speedSlider);
-        panBattle.add(creaPanTest());
 
         return panBattle;
     }
@@ -164,6 +140,7 @@ public class Arena extends CenteredFrame {
      */
     private Component creaPanComandi() {
         JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
 //        bStart.addActionListener(new ActionListener() {
@@ -182,86 +159,35 @@ public class Arena extends CenteredFrame {
 //
 //            }
 //        });
+
+        speedSlider = new JSlider();
+        speedSlider.setMaximum(DEFAULT_REQ_PER_SESSION);
+        speedSlider.setMajorTickSpacing(speedSlider.getMaximum() / 2);
+        speedSlider.setPaintTicks(true);
+        speedSlider.setPaintLabels(true);
+        speedSlider.setBorder(BorderFactory.createEmptyBorder(40, 20, 10, 20));
+        speedSlider.addChangeListener(new ChangeListener() {
+
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                updateSliderText();
+            }
+        });
+
+        panel.add(speedSlider);
         panel.add(bStart);
 
 
         return panel;
     }
 
-    /**
-     * Invocato ogni volta che un worker finisce il suo lavoro
-     */
-    public void workerFinished(BotWorker worker) {
-
-        // se entrambi i worker sono terminati la sfida è terminata
-        if (worker1.isFinished()) {
-            running = false;
-            bStart.setText("Start");
-        }
-
-//		// se è un overflow assegna il trofeo all'altro bot
-//		if(worker.isOverflow()){
-//			if(winner==null){
-//				if(worker.equals(worker1)){
-//					winner=worker2.getBot();
-//				}else{
-//					winner=worker1.getBot();
-//				}
-//				labelWinner.setText("Winner: "+winner.getNome());
-//			}
-//		}
-
-    }
 
 
-    /**
-     * Pannello con i test
-     */
-    private Component creaPanTest() {
-        JPanel pan = new JPanel();
-        check1 = new JCheckBox(Tests.SORT_WORD.getTestName());
-        check2 = new JCheckBox(Tests.INVERT_WORD.getTestName());
-        check3 = new JCheckBox(Tests.CALC_CKECKSUM.getTestName());
-        check4 = new JCheckBox(Tests.DECRYPT_WORD.getTestName());
-
-        pan.add(check1);
-        pan.add(check2);
-        pan.add(check3);
-        pan.add(check4);
-
-        return pan;
-
-    }
 
 
     public JSlider getSpeedSlider() {
         return speedSlider;
     }
 
-
-    public boolean isStopped() {
-        return stopped;
-    }
-
-
-    public Bot getWinner() {
-        return winner;
-    }
-
-    public boolean isCheck1() {
-        return check1.isSelected();
-    }
-
-    public boolean isCheck2() {
-        return check2.isSelected();
-    }
-
-    public boolean isCheck3() {
-        return check3.isSelected();
-    }
-
-    public boolean isCheck4() {
-        return check4.isSelected();
-    }
 
 }

@@ -21,6 +21,9 @@ public class BotTestComponent extends JPanel {
     private boolean stopped = false;
     private final JProgressBar bar;
     private JLabel labelStatus;
+    private Arena arena;
+    private JTextField iterField;
+    private JTextField timeField;
 
 
     /**
@@ -29,9 +32,10 @@ public class BotTestComponent extends JPanel {
      * @param bot  il bot da testare
      * @param test il test da eseguire
      */
-    public BotTestComponent(Bot bot, Tests test) {
+    public BotTestComponent(Bot bot, Tests test, Arena arena) {
         this.bot = bot;
         this.test = test;
+        this.arena=arena;
 
         BoxLayout layout = new BoxLayout(this, BoxLayout.X_AXIS);
         setLayout(layout);
@@ -57,6 +61,9 @@ public class BotTestComponent extends JPanel {
         Component compResult=createCompResult();
 
         labelStatus=new JLabel();
+        labelStatus.setMinimumSize(new Dimension(100, 30));
+        labelStatus.setPreferredSize(new Dimension(100, 30));
+        labelStatus.setMaximumSize(new Dimension(100, 30));
 
         add(labelTest);
         add(Box.createRigidArea(new Dimension(10,0)));
@@ -91,8 +98,7 @@ public class BotTestComponent extends JPanel {
         pan.setLayout(new BoxLayout(pan, BoxLayout.X_AXIS));
 
         JLabel iterLabel = new JLabel("iter");
-        JTextField iterField = new JTextField();
-        iterField.setText("50.000.000");
+        iterField = new JTextField();
         iterField.setEnabled(false);
         iterField.setMinimumSize(new Dimension(90, 30));
         iterField.setPreferredSize(new Dimension(90, 30));
@@ -100,18 +106,18 @@ public class BotTestComponent extends JPanel {
 
         JLabel resLabel = new JLabel("time");
 
-        JTextField resField = new JTextField();
-        resField.setText("00:00");
-        resField.setEnabled(false);
-        resField.setMinimumSize(new Dimension(60, 30));
-        resField.setPreferredSize(new Dimension(60, 30));
-        resField.setMaximumSize(new Dimension(60, 30));
+        timeField = new JTextField();
+        timeField.setText("00:00");
+        timeField.setEnabled(false);
+        timeField.setMinimumSize(new Dimension(60, 30));
+        timeField.setPreferredSize(new Dimension(60, 30));
+        timeField.setMaximumSize(new Dimension(60, 30));
 
         pan.add(iterLabel);
         pan.add(iterField);
         pan.add(Box.createRigidArea(new Dimension(10,0)));
         pan.add(resLabel);
-        pan.add(resField);
+        pan.add(timeField);
 
         return pan;
     }
@@ -148,4 +154,15 @@ public class BotTestComponent extends JPanel {
         return labelStatus;
     }
 
+    public Arena getArena() {
+        return arena;
+    }
+
+    public JTextField getIterField() {
+        return iterField;
+    }
+
+    public JTextField getTimeField() {
+        return timeField;
+    }
 }

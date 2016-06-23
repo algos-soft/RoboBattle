@@ -38,7 +38,7 @@ public class Round extends JPanel{
 				b.addWindowListener(new WindowAdapter() {
 					@Override
 					public void windowClosed(WindowEvent e) {
-						setWinner(b.getWinner());
+						//setWinner(b.getWinner());
 					}
 				});
 			}
