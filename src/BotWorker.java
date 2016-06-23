@@ -181,7 +181,7 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
     protected void done() {
         getBar().setForeground(Color.red);
         getBar().setString("Terminato!");
-        testComp.workerFinished();
+        testComp.workerFinished(getSessionResults());
     }
 
 
@@ -235,7 +235,7 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
     /**
      * Classe che rappresenta i risultati di un test
      */
-    private class JobResults {
+    public class JobResults {
 
         private ArrayList<Task> tasks;
 

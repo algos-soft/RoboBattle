@@ -24,6 +24,7 @@ public class BotTestComponent extends JPanel {
     private Arena arena;
     private JTextField iterField;
     private JTextField timeField;
+    private BotWorker worker;
 
 
     /**
@@ -81,7 +82,7 @@ public class BotTestComponent extends JPanel {
      */
     private void startOrStop() {
         if(!running){
-            BotWorker worker = new BotWorker(this);
+            worker = new BotWorker(this);
             worker.execute();
             running=true;
             stopped=false;
@@ -123,9 +124,11 @@ public class BotTestComponent extends JPanel {
     }
 
     /**
-     * Invocato ogni volta che un worker finisce il suo lavoro
+     * Invocato ogni volta che un worker finisce il suo lavoro o viene abortito.
+     * @param results i risultati della sessione
      */
-    public void workerFinished() {
+    public void workerFinished(BotWorker.JobResults results) {
+        //disqualified=worker.getSessionResults();
         running = false;
     }
 

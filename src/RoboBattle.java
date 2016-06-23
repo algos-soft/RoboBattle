@@ -9,8 +9,6 @@ import javax.swing.*;
 public class RoboBattle extends CenteredFrame {
 
 	private ArrayList<Bot> bots;
-	private ArrayList<Round> rounds;
-	private JPanel panRounds;
 	private JButton bStart;
 	private final Tabellone tabellone;
 
@@ -19,9 +17,6 @@ public class RoboBattle extends CenteredFrame {
 		setTitle("RoboBattle");
 		setPreferredSize(new Dimension(700, 560));
 		
-		panRounds=creaPanRounds();
-		//add(panRounds);
-
 		tabellone = new Tabellone(this);
 		JScrollPane scroller = new JScrollPane(tabellone);
 		tabellone.setFillsViewportHeight(true);
@@ -36,52 +31,9 @@ public class RoboBattle extends CenteredFrame {
 		bots.add(new MegaBot());
 		bots.add(new KiloBot());
 
-		start();
-	}
-
-	private void start() {
-		createRounds();
-//		invalidate();
-//		repaint();
-	}
-
-	/**
-	 * Crea l'elenco dei rounds con tutte le permutazioni dei bots
-	 */
-	private void createRounds() {
-		rounds = new ArrayList<Round>();
-		Bot[] aBots = bots.toArray(new Bot[0]);
-		
-		for (int i = 0; i <aBots.length-1 ; i++) {
-			Bot bot1 = aBots[i];
-			for (int j = i+1; j <aBots.length ; j++) {
-				Bot bot2 = aBots[j];
-				rounds.add(new Round(bot1, bot2));
-			}
-		}
-		
-		Collections.shuffle(rounds);
-
-		// mette i rounds graficamente nel pannello
-		panRounds.removeAll();
-		for (Round r : rounds) {
-			panRounds.add(r);
-		}
-
 	}
 
 
-	/**
-	 * Crea il pannello dei round.
-	 * @return il pannello dei round
-	 */
-	private JPanel creaPanRounds() {
-		JPanel pan = new JPanel();
-		BoxLayout layout = new BoxLayout(pan, BoxLayout.Y_AXIS);
-		pan.setLayout(layout);
-		pan.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
-		return pan;
-	}
 
 	/**
 	 * Crea il pannello con i comandi.
@@ -143,18 +95,9 @@ public class RoboBattle extends CenteredFrame {
 		return bots;
 	}
 
-	public void setBots(ArrayList<Bot> bots) {
-		this.bots = bots;
-	}
-
 	public JButton getbStart() {
 		return bStart;
 	}
-
-	public void setbStart(JButton bStart) {
-		this.bStart = bStart;
-	}
-
 
 	public static void main(String[] args) {
 		RoboBattle b = new RoboBattle();
