@@ -25,6 +25,7 @@ public class BotTestComponent extends JPanel {
     private JTextField iterField;
     private JTextField timeField;
     private BotWorker worker;
+    private JTextField errField;
 
 
     /**
@@ -47,8 +48,8 @@ public class BotTestComponent extends JPanel {
         labelTest.setPreferredSize(new Dimension(120, 0));
 
         bar = new JProgressBar(0, 100);
-        bar.setMinimumSize(new Dimension(20, 30));
-        bar.setPreferredSize(new Dimension(200, 30));
+        bar.setMinimumSize(new Dimension(20, 50));
+        bar.setPreferredSize(new Dimension(200, 50));
         bar.setStringPainted(true);
 
         JButton bStart = new JButton("Start");
@@ -98,27 +99,37 @@ public class BotTestComponent extends JPanel {
         JPanel pan = new JPanel();
         pan.setLayout(new BoxLayout(pan, BoxLayout.X_AXIS));
 
-        JLabel iterLabel = new JLabel("iter");
+        JLabel iterLabel = new JLabel("iter ");
         iterField = new JTextField();
-        iterField.setEnabled(false);
+        iterField.setEditable(false);
         iterField.setMinimumSize(new Dimension(90, 30));
         iterField.setPreferredSize(new Dimension(90, 30));
         iterField.setMaximumSize(new Dimension(90, 30));
 
-        JLabel resLabel = new JLabel("time");
+        JLabel resLabel = new JLabel("time ");
 
         timeField = new JTextField();
-        timeField.setText("00:00");
-        timeField.setEnabled(false);
+        timeField.setEditable(false);
         timeField.setMinimumSize(new Dimension(60, 30));
         timeField.setPreferredSize(new Dimension(60, 30));
         timeField.setMaximumSize(new Dimension(60, 30));
+
+        JLabel errLabel = new JLabel("err ");
+
+        errField = new JTextField();
+        errField.setEditable(false);
+        errField.setMinimumSize(new Dimension(90, 30));
+        errField.setPreferredSize(new Dimension(90, 30));
+        errField.setMaximumSize(new Dimension(90, 30));
 
         pan.add(iterLabel);
         pan.add(iterField);
         pan.add(Box.createRigidArea(new Dimension(10,0)));
         pan.add(resLabel);
         pan.add(timeField);
+        pan.add(errLabel);
+        pan.add(errField);
+
 
         return pan;
     }
@@ -127,7 +138,7 @@ public class BotTestComponent extends JPanel {
      * Invocato ogni volta che un worker finisce il suo lavoro o viene abortito.
      * @param results i risultati della sessione
      */
-    public void workerFinished(BotWorker.JobResults results) {
+    public void workerFinished() {
         //disqualified=worker.getSessionResults();
         running = false;
     }
@@ -168,4 +179,9 @@ public class BotTestComponent extends JPanel {
     public JTextField getTimeField() {
         return timeField;
     }
+
+    public JTextField getErrField() {
+        return errField;
+    }
+
 }

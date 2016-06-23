@@ -3,11 +3,13 @@
  */
 public class JobStatus {
     long numRequests;
-    long elapsedMillis;
+	long elapsedMillis;
+	long numErrors;
 
-    public JobStatus(long numRequests, long elapsedMillis) {
+    public JobStatus(long numRequests, long elapsedMillis, long numErrors) {
         this.numRequests = numRequests;
         this.elapsedMillis = elapsedMillis;
+		this.numErrors=numErrors;
     }
 
 	public long getNumRequests() {
@@ -16,6 +18,10 @@ public class JobStatus {
 
 	public long getElapsedMillis() {
 		return elapsedMillis;
+	}
+
+	public long getNumErrors() {
+		return numErrors;
 	}
 
 	public String getElapsedStringSecs(){

@@ -13,12 +13,11 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
     private int totRequests;    // numero totale di richieste da inviare in una sessione di test
     private Random random = new Random();    // random generator
     private boolean finished;    // se l'elaborazione è terminata
-    private JobResults sessionResults;
 
 
     public BotWorker(BotTestComponent testComp) {
         super();
-        this.testComp=testComp;
+        this.testComp = testComp;
 
         final JSlider slider = this.testComp.getArena().getSpeedSlider();
         totRequests = slider.getValue();
@@ -38,42 +37,26 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
 
         boolean stop = false;
         long totRichiesteElaborate = 0;
+        long totErrors = 0;
+
         long lastUpdateMillis = 0;
         long totTimeNanos = 0;
 
-        // mantiene i risultati globali della sessione di run
-        sessionResults = new JobResults();
 
         while (!stop) {
 
             // fa eseguire una operazione al bot
-            JobResults results = new JobResults();
-            doJob(results);
-            totTimeNanos += results.getNanos();
+            JobResults result = new JobResults();
+            doJob(result);
+            totTimeNanos += result.getNanos();
 
             // controlla e convalida i risultati
-            results.validate();
+            result.validate();
 
             // se i risultati non sono validi, logga gli errori
-            if (!results.isValid()) {
-                results.logErrors();
-            }
-
-            // aggiorna i risultati globali
-            for (Task task : results.getTasks()) {
-                Tests test=task.getTest();
-                long nanos=task.getNanos();
-                boolean valid=task.isValid();
-
-                // aggiunge il tempo ai risultati globali
-                sessionResults.addNanos(test, nanos);
-
-                // se non valido incrementa il conteggio degli errori.
-                // al primo task non valido mette tutto il test non valido.
-                if (!valid) {
-                    //sessionResults.addErrorCount();
-                    sessionResults.getTask(test).setValid(false);
-                }
+            if (!result.isValid()) {
+                System.out.println(result.getError());
+                totErrors++;
             }
 
             totRichiesteElaborate++;
@@ -81,7 +64,7 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
             // ogni tanto pubblica lo stato di avanzamento
             long elapsedSinceLastUpdate = System.currentTimeMillis() - lastUpdateMillis;
             if (elapsedSinceLastUpdate > 250) {
-                JobStatus status = new JobStatus(totRichiesteElaborate, totTimeNanos / 1000000);
+                JobStatus status = new JobStatus(totRichiesteElaborate, totTimeNanos / 1000000, totErrors);
                 publish(status);
                 lastUpdateMillis = System.currentTimeMillis();
             }
@@ -89,7 +72,7 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
             // quando ha elaborato tutte le righieste previste si ferma
             if (totRichiesteElaborate >= totRequests) {
                 finished = true;
-                JobStatus status = new JobStatus(totRichiesteElaborate, totTimeNanos / 1000000);
+                JobStatus status = new JobStatus(totRichiesteElaborate, totTimeNanos / 1000000, totErrors);
                 publish(status);
                 stop = true;
             }
@@ -106,7 +89,6 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
     }
 
 
-
     /**
      * Esegue un job sul bot
      * esegue solo i task abilitati
@@ -119,40 +101,38 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
         String response;
         int sum;
 
-        if (getTest()==Tests.SORT_WORD) {
-            request = getRandomString();
-            t1 = System.nanoTime();
-            response = getBot().sortWord(request);
-            results.put(Tests.SORT_WORD, System.nanoTime() - t1, request, response);
-        }
+        switch (getTest()) {
 
-        if (getTest()==Tests.INVERT_WORD) {
-            request = getRandomString();
-            t1 = System.nanoTime();
-            response = getBot().invertWord(request);
-            results.put(Tests.INVERT_WORD, System.nanoTime() - t1, request, response);
+            case SORT_WORD:
+                request = getRandomString();
+                t1 = System.nanoTime();
+                response = getBot().sortWord(request);
+                results.put(Tests.SORT_WORD, System.nanoTime() - t1, request, response);
 
-        }
+            case INVERT_WORD:
+                request = getRandomString();
+                t1 = System.nanoTime();
+                response = getBot().invertWord(request);
+                results.put(Tests.INVERT_WORD, System.nanoTime() - t1, request, response);
 
-        if (getTest()==Tests.CALC_CKECKSUM) {
-            request = getRandomString();
-            t1 = System.nanoTime();
-            sum = getBot().calcChecksum(request);
-            results.put(Tests.CALC_CKECKSUM, System.nanoTime() - t1, request, sum);
+            case CALC_CKECKSUM:
+                request = getRandomString();
+                t1 = System.nanoTime();
+                sum = getBot().calcChecksum(request);
+                results.put(Tests.CALC_CKECKSUM, System.nanoTime() - t1, request, sum);
 
-        }
-        if (getTest()==Tests.DECRYPT_WORD) {
-            request = getRandomString();
-            String key = "abcd";
-            t1 = System.nanoTime();
-            response = getBot().decryptWord(request, key);
-            long nanos = System.nanoTime() - t1;
-            String[] strings = {request, key};
-            results.put(Tests.DECRYPT_WORD, nanos, strings, response);
+            case DECRYPT_WORD:
+                request = getRandomString();
+                String key = "abcd";
+                t1 = System.nanoTime();
+                response = getBot().decryptWord(request, key);
+                long nanos = System.nanoTime() - t1;
+                String[] strings = {request, key};
+                results.put(Tests.DECRYPT_WORD, nanos, strings, response);
+
         }
 
     }
-
 
 
     @Override
@@ -163,8 +143,11 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
             getBar().setString(percent + "%");
 
             String snum = NumberFormat.getIntegerInstance().format(+s.getNumRequests());
+            String serr = NumberFormat.getIntegerInstance().format(+s.getNumErrors());
+
             testComp.getIterField().setText(snum);
             testComp.getTimeField().setText(s.getElapsedStringSecs());
+            testComp.getErrField().setText(serr);
 
             Color c;
             if (percent < 75) {
@@ -181,7 +164,7 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
     protected void done() {
         getBar().setForeground(Color.red);
         getBar().setString("Terminato!");
-        testComp.workerFinished(getSessionResults());
+        testComp.workerFinished();
     }
 
 
@@ -206,68 +189,45 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
         return testComp.getTest();
     }
 
-    public JProgressBar getBar(){
+    public JProgressBar getBar() {
         return testComp.getBar();
     }
 
-    public JLabel getLabelStatus(){
+    public JLabel getLabelStatus() {
         return testComp.getLabelStatus();
     }
 
-
-    public JobResults getSessionResults() {
-        return sessionResults;
-    }
-
-    /**
-     * Ritorna un testo con i risultati della sessione.
-     * @return il testo
-     */
-    public String getSessionInfo(){
-        String text="";
-        JobResults results = getSessionResults();
-        for(Task task : results.getTasks()){
-            task.getNanos();
-        }
-        return text;
-    }
 
     /**
      * Classe che rappresenta i risultati di un test
      */
     public class JobResults {
 
-        private ArrayList<Task> tasks;
+        private Tests test;
+        private long nanos;
+        private Object request;
+        private Object response;
+        private boolean valid;
+        private String error;
+        private int errCount = 0;
 
         public JobResults() {
-            tasks = new ArrayList();
         }
 
         public void put(Tests test, long nanos, Object request, Object response) {
-            Task task = new Task(test, nanos, request, response);
-            tasks.add(task);
+            this.test = test;
+            this.nanos = nanos;
+            this.request = request;
+            this.response = response;
         }
 
         /**
-         * Aggiunge tempo a un task esistente.
-         * Se il task non esiste aggiunge un Task ora.
+         * Aggiunge tempo al task esistente.
          *
-         * @param test  il tipo di test
          * @param nanos i nanos da aggiungere
          */
-        public void addNanos(Tests test, long nanos) {
-            boolean found = false;
-            for (Task t : tasks) {
-                if (t.getTest().equals(test)) {
-                    found = true;
-                    t.addNanos(nanos);
-                    break;
-                }
-            }
-            // se non trovato aggiunge il task ora con i nanos
-            if (!found) {
-                put(test, nanos, null, null);
-            }
+        public void addNanos(long nanos) {
+            this.nanos+=nanos;
         }
 
 
@@ -280,203 +240,106 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
         public void validate() {
             String botname = getBot().getNome();
 
-            for (Task t : tasks) {
 
-                String request;
-                String taskname;
-                switch (t.getTest()) {
+            String request;
+            String taskname;
+            switch (test) {
 
 
-                    case SORT_WORD:
-                        taskname = t.getTest().getTestName();
-                        request = (String) t.getRequest();
-                        if (t.getResponse() != null) {
-                            String goodResponse = BotAlgorhitms.sortWord(request);
-                            String checkResponse = (String) t.getResponse();
-                            if (checkResponse.equals(goodResponse)) {
-                                t.setValid(true);
-                            } else {
-                                t.setError(botname + " : " + taskname + ": risposta non valida: req->" + request + " resp->" + checkResponse + " good->" + goodResponse);
-                            }
+                case SORT_WORD:
+                    taskname = test.getTestName();
+                    request = (String)getRequest();
+                    if (getResponse() != null) {
+                        String goodResponse = BotAlgorhitms.sortWord(request);
+                        String checkResponse = (String)getResponse();
+                        if (checkResponse.equals(goodResponse)) {
+                            valid=true;
                         } else {
-                            t.setError(botname + " : " + taskname + ": risposta nulla: req->" + request + " resp->null");
+                            error=botname + " : " + taskname + ": risposta non valida: req->" + request + " resp->" + checkResponse + " good->" + goodResponse;
                         }
-                        break;
+                    } else {
+                        error=botname + " : " + taskname + ": risposta nulla: req->" + request + " resp->null";
+                    }
+                    break;
 
 
-                    case INVERT_WORD:
-                        taskname = t.getTest().getTestName();
-                        request = (String) t.getRequest();
-                        if (t.getResponse() != null) {
-                            String goodResponse = BotAlgorhitms.invertWord(request);
-                            String checkResponse = (String) t.getResponse();
-                            if (checkResponse.equals(goodResponse)) {
-                                t.setValid(true);
-                            } else {
-                                t.setError(botname + " : " + taskname + ": risposta non valida: req->" + request + " resp->" + checkResponse + " good->" + goodResponse);
-                            }
+                case INVERT_WORD:
+                    taskname = test.getTestName();
+                    request = (String)getRequest();
+                    if (getResponse() != null) {
+                        String goodResponse = BotAlgorhitms.invertWord(request);
+                        String checkResponse = (String)getResponse();
+                        if (checkResponse.equals(goodResponse)) {
+                            valid=true;
                         } else {
-                            t.setError(botname + " : " + taskname + ": risposta nulla: req->" + request + " resp->null");
+                            error=botname + " : " + taskname + ": risposta non valida: req->" + request + " resp->" + checkResponse + " good->" + goodResponse;
                         }
-                        break;
+                    } else {
+                        error=botname + " : " + taskname + ": risposta nulla: req->" + request + " resp->null";
+                    }
+                    break;
 
-                    case CALC_CKECKSUM:
-                        taskname = t.getTest().getTestName();
-                        request = (String) t.getRequest();
-                        if (t.getResponse() != null) {
-                            int goodResponse = BotAlgorhitms.calcChecksum(request);
-                            int checkResponse = (Integer) t.getResponse();
-                            if (checkResponse == goodResponse) {
-                                t.setValid(true);
-                            } else {
-                                t.setError(botname + " : " + taskname + ": risposta non valida: req->" + request + " resp->" + checkResponse + " good->" + goodResponse);
-                            }
+                case CALC_CKECKSUM:
+                    taskname = test.getTestName();
+                    request = (String)getRequest();
+                    if (getResponse() != null) {
+                        int goodResponse = BotAlgorhitms.calcChecksum(request);
+                        int checkResponse = (Integer)getResponse();
+                        if (checkResponse == goodResponse) {
+                            valid=true;
                         } else {
-                            t.setError(botname + " : " + taskname + ": risposta nulla: req->" + request + " resp->null");
+                            error=botname + " : " + taskname + ": risposta non valida: req->" + request + " resp->" + checkResponse + " good->" + goodResponse;
                         }
-                        break;
+                    } else {
+                        error=botname + " : " + taskname + ": risposta nulla: req->" + request + " resp->null";
+                    }
+                    break;
 
-                    case DECRYPT_WORD:
-                        taskname = t.getTest().getTestName();
-                        String[] strings = (String[]) t.getRequest();
-                        String word = strings[0];
-                        String key = strings[1];
-                        String wordkey = word + "," + key;
-                        if (t.getResponse() != null) {
-                            String goodResponse = BotAlgorhitms.decryptWord(word, key);
-                            String checkResponse = (String) t.getResponse();
-                            if (checkResponse.equals(goodResponse)) {
-                                t.setValid(true);
-                            } else {
-                                t.setError(botname + " : " + taskname + ": risposta non valida: req->" + wordkey + " resp->" + checkResponse + " good->" + goodResponse);
-                            }
+                case DECRYPT_WORD:
+                    taskname = test.getTestName();
+                    String[] strings = (String[])getRequest();
+                    String word = strings[0];
+                    String key = strings[1];
+                    String wordkey = word + "," + key;
+                    if (getResponse() != null) {
+                        String goodResponse = BotAlgorhitms.decryptWord(word, key);
+                        String checkResponse = (String)getResponse();
+                        if (checkResponse.equals(goodResponse)) {
+                            valid=true;
                         } else {
-                            t.setError(botname + " : " + taskname + ": risposta nulla: req->" + wordkey + " resp->null");
+                            error=botname + " : " + taskname + ": risposta non valida: req->" + wordkey + " resp->" + checkResponse + " good->" + goodResponse;
                         }
-                        break;
+                    } else {
+                        error=botname + " : " + taskname + ": risposta nulla: req->" + wordkey + " resp->null";
+                    }
+                    break;
 
-                }
             }
         }
 
         /**
-         * Controlla se i risultati sono validi.
+         * Controlla se il risultato è valido.
          *
-         * @return true se tutti i risultati sono validi
+         * @return true se valido
          */
         public boolean isValid() {
-            boolean valid = true;
-            for (Task t : tasks) {
-                if (!t.isValid()) {
-                    valid = false;
-                }
-            }
-            return valid;
-        }
-
-        /**
-         * Ritorna il tempo totale impiegato per svolgere tutti i tasks
-         *
-         * @return il tempo totale
-         */
-        public long getNanos() {
-            long nanos = 0;
-            for (Task t : tasks) {
-                nanos += t.getNanos();
-            }
-            return nanos;
-        }
-
-
-        /**
-         * @param test il test
-         * @return il task, null se non trovato
-         */
-        public Task getTask(Tests test) {
-            Task found=null;
-            for (Task t : tasks) {
-                if(t.getTest().equals(test)){
-                    found=t;
-                }
-            }
-            return found;
-        }
-
-        /**
-         * Logga tutti gli errori
-         */
-        public void logErrors() {
-            for (Task t : tasks) {
-                if (!t.isValid()) {
-                    System.out.println(t.getError());
-                }
-            }
-        }
-
-        public ArrayList<Task> getTasks() {
-            return tasks;
-        }
-    }
-
-    /**
-     * Classe che rappresenta i risultati di un task
-     */
-    private class Task {
-
-        private Tests test;
-        private long nanos;
-        private Object request;
-        private Object response;
-        private boolean valid;
-        private String error;
-        private int errCount=0;
-
-        public Task(Tests test, long nanos, Object request, Object response) {
-            this.test = test;
-            this.nanos = nanos;
-            this.request = request;
-            this.response = response;
-        }
-
-        public Tests getTest() {
-            return test;
-        }
-
-        public long getNanos() {
-            return nanos;
-        }
-
-        public Object getRequest() {
-            return request;
+            return valid==true;
         }
 
         public Object getResponse() {
             return response;
         }
 
-        public boolean isValid() {
-            return valid;
+        public Object getRequest() {
+            return request;
         }
 
-        public void setValid(boolean valid) {
-            this.valid = valid;
+        public long getNanos() {
+            return nanos;
         }
 
         public String getError() {
             return error;
         }
-
-        public void setError(String error) {
-            this.error = error;
-        }
-
-        public void addNanos(long nanos) {
-            this.nanos = this.nanos + nanos;
-        }
-
-        public void addErrCount(){
-            this.errCount=this.errCount+1;
-        }
-
     }
 }

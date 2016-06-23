@@ -166,6 +166,7 @@ public class Arena extends CenteredFrame {
         speedSlider.setPaintTicks(true);
         speedSlider.setPaintLabels(true);
         speedSlider.setBorder(BorderFactory.createEmptyBorder(40, 20, 10, 20));
+        speedSlider.setValue(DEFAULT_REQ_PER_SESSION / 2);
         speedSlider.addChangeListener(new ChangeListener() {
 
             @Override
@@ -173,6 +174,8 @@ public class Arena extends CenteredFrame {
                 updateSliderText();
             }
         });
+        updateSliderText();
+
 
         panel.add(speedSlider);
         panel.add(bStart);
