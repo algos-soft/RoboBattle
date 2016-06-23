@@ -9,24 +9,17 @@ import java.util.Random;
 
 public class BotWorker extends SwingWorker<Void, JobStatus> {
 
-    private Bot bot; // il bot impegnato;
-    private BotTestComponent testComp;  // il componente grafico di testing
-    private JProgressBar bar; // la progress bar della coda
-    private JLabel labelStatus; // label per lo status del bot
+    private BotTestComponent testComp;  // il componente grafico di testing, contiene bot e test
     private int totRequests;    // numero totale di richieste da inviare in una sessione di test
     private Random random = new Random();    // random generator
     private boolean finished;    // se l'elaborazione è terminata
     private JobResults sessionResults;
 
 
-    public BotWorker(BotTestComponent testComp, Bot bot, JProgressBar bar, JLabel labelStatus) {
+    public BotWorker(BotTestComponent testComp) {
         super();
         this.testComp=testComp;
-        this.bot = bot;
-        this.bar = bar;
-        this.labelStatus = labelStatus;
 
-        bar.setStringPainted(true);
 
 //        totRequests = arena.getSpeedSlider().getValue();
 //        arena.getSpeedSlider().addChangeListener(new ChangeListener() {
@@ -113,6 +106,8 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
         return null;
     }
 
+
+
     /**
      * Esegue un job sul bot
      * esegue solo i task abilitati
@@ -123,35 +118,35 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
         long t1;
         String request;
         String response;
-        int sum = 0;
+        int sum;
 
-        if (arena.isCheck1()) {
+        if (getTest()==Tests.SORT_WORD) {
             request = getRandomString();
             t1 = System.nanoTime();
-            response = bot.sortWord(request);
+            response = getBot().sortWord(request);
             results.put(Tests.SORT_WORD, System.nanoTime() - t1, request, response);
         }
 
-        if (arena.isCheck2()) {
+        if (getTest()==Tests.INVERT_WORD) {
             request = getRandomString();
             t1 = System.nanoTime();
-            response = bot.invertWord(request);
+            response = getBot().invertWord(request);
             results.put(Tests.INVERT_WORD, System.nanoTime() - t1, request, response);
 
         }
 
-        if (arena.isCheck3()) {
+        if (getTest()==Tests.CALC_CKECKSUM) {
             request = getRandomString();
             t1 = System.nanoTime();
-            sum = bot.calcChecksum(request);
+            sum = getBot().calcChecksum(request);
             results.put(Tests.CALC_CKECKSUM, System.nanoTime() - t1, request, sum);
 
         }
-        if (arena.isCheck4()) {
+        if (getTest()==Tests.DECRYPT_WORD) {
             request = getRandomString();
             String key = "abcd";
             t1 = System.nanoTime();
-            response = bot.decryptWord(request, key);
+            response = getBot().decryptWord(request, key);
             long nanos = System.nanoTime() - t1;
             String[] strings = {request, key};
             results.put(Tests.DECRYPT_WORD, nanos, strings, response);
@@ -160,14 +155,15 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
     }
 
 
+
     @Override
     protected void process(List<JobStatus> chunks) {
         for (JobStatus s : chunks) {
             int percent = (int) (100 * s.getNumRequests() / totRequests);
-            bar.setValue(percent);
-            bar.setString(percent + "%");
+            getBar().setValue(percent);
+            getBar().setString(percent + "%");
             String snum = NumberFormat.getIntegerInstance().format(+s.getNumRequests());
-            labelStatus.setText("tot: " + snum + " - CPU time: " + s.getElapsedStringSecs());
+            getLabelStatus().setText("tot: " + snum + " - CPU time: " + s.getElapsedStringSecs());
 
             Color c;
             if (percent < 75) {
@@ -175,16 +171,16 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
             } else {
                 c = Color.orange;
             }
-            bar.setForeground(c);
+            getBar().setForeground(c);
 
         }
     }
 
     @Override
     protected void done() {
-        bar.setForeground(Color.red);
-        bar.setString("Terminato!");
-        arena.workerFinished(this);
+        getBar().setForeground(Color.red);
+        getBar().setString("Terminato!");
+        testComp.workerFinished();
     }
 
 
@@ -202,8 +198,21 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
     }
 
     public Bot getBot() {
-        return bot;
+        return testComp.getBot();
     }
+
+    public Tests getTest() {
+        return testComp.getTest();
+    }
+
+    public JProgressBar getBar(){
+        return testComp.getBar();
+    }
+
+    public JLabel getLabelStatus(){
+        return testComp.getLabelStatus();
+    }
+
 
     public JobResults getSessionResults() {
         return sessionResults;
@@ -268,7 +277,7 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
          * Regola il testo d errore su ogni task non valido.
          */
         public void validate() {
-            String botname = bot.getNome();
+            String botname = getBot().getNome();
 
             for (Task t : tasks) {
 

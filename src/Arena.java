@@ -166,23 +166,24 @@ public class Arena extends CenteredFrame {
         JPanel panel = new JPanel();
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        bStart.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                if (!running) {
-                    running = true;
-                    stopped = false;
-                    bStart.setText("Stop");
-                    worker1 = new BotWorker(Arena.this, bot, bar1, labelStatus1);
-                    worker1.execute();
-                } else {
-                    stopped = true;
-                }
-
-            }
-        });
+//        bStart.addActionListener(new ActionListener() {
+//
+//            @Override
+//            public void actionPerformed(ActionEvent arg0) {
+//                if (!running) {
+//                    running = true;
+//                    stopped = false;
+//                    bStart.setText("Stop");
+//                    worker1 = new BotWorker(Arena.this, bot, bar1, labelStatus1);
+//                    worker1.execute();
+//                } else {
+//                    stopped = true;
+//                }
+//
+//            }
+//        });
         panel.add(bStart);
+
 
         return panel;
     }

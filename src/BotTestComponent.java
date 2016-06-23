@@ -44,6 +44,7 @@ public class BotTestComponent extends JPanel {
         bar = new JProgressBar(0, 100);
         bar.setMinimumSize(new Dimension(20, 30));
         bar.setPreferredSize(new Dimension(200, 30));
+        bar.setStringPainted(true);
 
         JButton bStart = new JButton("Start");
         bStart.addActionListener(new ActionListener() {
@@ -73,7 +74,7 @@ public class BotTestComponent extends JPanel {
      */
     private void startOrStop() {
         if(!running){
-            BotWorker worker = new BotWorker(this, bot, bar, labelStatus);
+            BotWorker worker = new BotWorker(this);
             worker.execute();
             running=true;
             stopped=false;
@@ -115,8 +116,36 @@ public class BotTestComponent extends JPanel {
         return pan;
     }
 
-    public boolean isStopped(){
+    /**
+     * Invocato ogni volta che un worker finisce il suo lavoro
+     */
+    public void workerFinished() {
+        running = false;
+    }
 
+
+    public boolean isStopped(){
+        return stopped;
+    }
+
+    public Bot getBot() {
+        return bot;
+    }
+
+    public JProgressBar getBar() {
+        return bar;
+    }
+
+//    public void setBot(Bot bot) {
+//        this.bot = bot;
+//    }
+
+    public Tests getTest() {
+        return test;
+    }
+
+    public JLabel getLabelStatus() {
+        return labelStatus;
     }
 
 }
