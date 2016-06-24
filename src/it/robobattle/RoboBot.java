@@ -31,7 +31,7 @@ public class RoboBot implements Bot {
 
 	@Override
 	public int calcChecksum(String in) {
-		return 0;
+		return 5/0;
 	}
 
 	@Override

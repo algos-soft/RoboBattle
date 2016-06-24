@@ -17,11 +17,9 @@ public class ResultComponent extends JPanel {
 
             String snum;
 
-            float seconds = result.getSeconds();
-            snum = NumberFormat.getNumberInstance().format(seconds);
-            snum=""+seconds;
-
-            JLabel labelTime = new JLabel(snum + " sec");
+            long millis=result.getMillis();
+            String stime=Lib.millisToString(millis);
+            JLabel labelTime = new JLabel(stime + " sec");
 
             snum = NumberFormat.getIntegerInstance().format(result.getWordcount());
             JLabel labelIter=new JLabel(snum + " words");

@@ -107,40 +107,57 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
     private void doJob(JobResults results) {
         long t1;
         String request;
-        String response;
-        int sum;
+        String response=null;
+        int sum=0;
+        String error=null;
 
         switch (getTest()) {
 
             case SORT_WORD:
                 request = getRandomString();
                 t1 = System.nanoTime();
-                response = getBot().sortWord(request);
-                results.put(Tests.SORT_WORD, System.nanoTime() - t1, request, response);
+                try {
+                    response = getBot().sortWord(request);
+                }catch (Exception e){
+                    error=e.getMessage();
+                }
+                results.setData(Tests.SORT_WORD, System.nanoTime() - t1, request, response, error);
                 break;
 
             case INVERT_WORD:
                 request = getRandomString();
                 t1 = System.nanoTime();
-                response = getBot().invertWord(request);
-                results.put(Tests.INVERT_WORD, System.nanoTime() - t1, request, response);
+                try {
+                    response = getBot().invertWord(request);
+                }catch (Exception e){
+                    error=e.getMessage();
+                }
+                results.setData(Tests.INVERT_WORD, System.nanoTime() - t1, request, response, error);
                 break;
 
             case CALC_CKECKSUM:
                 request = getRandomString();
                 t1 = System.nanoTime();
-                sum = getBot().calcChecksum(request);
-                results.put(Tests.CALC_CKECKSUM, System.nanoTime() - t1, request, sum);
+                try {
+                    sum = getBot().calcChecksum(request);
+                }catch (Exception e){
+                    error=e.getMessage();
+                }
+                results.setData(Tests.CALC_CKECKSUM, System.nanoTime() - t1, request, sum, error);
                 break;
 
             case DECRYPT_WORD:
                 request = getRandomString();
                 String key = "abcd";
                 t1 = System.nanoTime();
-                response = getBot().decryptWord(request, key);
+                try {
+                    response = getBot().decryptWord(request, key);
+                }catch (Exception e){
+                    error=e.getMessage();
+                }
                 long nanos = System.nanoTime() - t1;
                 String[] strings = {request, key};
-                results.put(Tests.DECRYPT_WORD, nanos, strings, response);
+                results.setData(Tests.DECRYPT_WORD, nanos, strings, response, error);
                 break;
 
         }
@@ -155,11 +172,12 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
             getBar().setValue(percent);
             getBar().setString(percent + "%");
 
-            String snum = NumberFormat.getIntegerInstance().format(+s.getNumRequests());
-            String serr = NumberFormat.getIntegerInstance().format(+s.getNumErrors());
+            String snum = NumberFormat.getIntegerInstance().format(s.getNumRequests());
+            String serr = NumberFormat.getIntegerInstance().format(s.getNumErrors());
+            String stime=Lib.millisToString(s.getElapsedMillis());
 
             testComp.getIterField().setText(snum);
-            testComp.getTimeField().setText(s.getElapsedStringSecs());
+            testComp.getTimeField().setText(stime);
             testComp.getErrField().setText(serr);
 
             Color c;

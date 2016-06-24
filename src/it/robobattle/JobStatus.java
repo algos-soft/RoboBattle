@@ -26,9 +26,9 @@ public class JobStatus {
 		return numErrors;
 	}
 
-	public String getElapsedStringSecs(){
-		long intero = elapsedMillis/1000;
-		long resto = elapsedMillis % 1000;
-		return intero+":"+resto;
-	}
+//	public String getElapsedStringSecs(){
+//		long intero = elapsedMillis/1000;
+//		long resto = elapsedMillis % 1000;
+//		return intero+":"+resto;
+//	}
 }
