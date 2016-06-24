@@ -2,7 +2,7 @@
   <artifact type="jar" name="RoboTester">
     <output-path>$PROJECT_DIR$/out/artifacts/RoboTester</output-path>
     <root id="archive" name="RoboTester.jar">
-      <element id="module-output" name="RoboTester" />
+      <element id="module-output" name="RoboBattle" />
     </root>
   </artifact>
 </component>

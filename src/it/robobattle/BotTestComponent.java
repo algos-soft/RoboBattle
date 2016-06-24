@@ -1,4 +1,5 @@
-package it.robobattle; /**
+package it.robobattle;
+/**
  * Created by alex on 22/06/16.
  */
 
