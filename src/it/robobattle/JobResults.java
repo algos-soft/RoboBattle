@@ -12,18 +12,20 @@ public class JobResults {
     private Object response;
     private boolean valid;
     private String error;
+    private String exception;
+
     private int errCount = 0;
 
     public JobResults(Bot bot) {
         this.bot = bot;
     }
 
-    public void setData(Tests test, long nanos, Object request, Object response, String error) {
+    public void setData(Tests test, long nanos, Object request, Object response, String exception) {
         this.test = test;
         this.nanos = nanos;
         this.request = request;
         this.response = response;
-        this.error = error;
+        this.exception = exception;
     }
 
     /**
@@ -44,7 +46,7 @@ public class JobResults {
             case SORT_WORD:
                 taskname = test.getTestName();
                 request = (String) getRequest();
-                if (error == null) {
+                if (exception == null) {
                     if (getResponse() != null) {
                         String goodResponse = BotAlgorhitms.sortWord(request);
                         String checkResponse = (String) getResponse();
@@ -56,6 +58,8 @@ public class JobResults {
                     } else {
                         error = botname + " : " + taskname + ": risposta nulla: req->" + request + " resp->null";
                     }
+                }else{
+                    error = botname + " : " + taskname + ": bot exception: " + exception;
                 }
                 break;
 
@@ -63,7 +67,7 @@ public class JobResults {
             case INVERT_WORD:
                 taskname = test.getTestName();
                 request = (String) getRequest();
-                if (error == null) {
+                if (exception == null) {
                     if (getResponse() != null) {
                         String goodResponse = BotAlgorhitms.invertWord(request);
                         String checkResponse = (String) getResponse();
@@ -75,6 +79,8 @@ public class JobResults {
                     } else {
                         error = botname + " : " + taskname + ": risposta nulla: req->" + request + " resp->null";
                     }
+                }else{
+                    error = botname + " : " + taskname + ": bot exception: " + exception;
                 }
                 break;
 
@@ -82,7 +88,7 @@ public class JobResults {
             case CALC_CKECKSUM:
                 taskname = test.getTestName();
                 request = (String) getRequest();
-                if (error == null) {
+                if (exception == null) {
                     if (getResponse() != null) {
                         int goodResponse = BotAlgorhitms.calcChecksum(request);
                         int checkResponse = (Integer) getResponse();
@@ -94,6 +100,8 @@ public class JobResults {
                     } else {
                         error = botname + " : " + taskname + ": risposta nulla: req->" + request + " resp->null";
                     }
+                }else{
+                    error = botname + " : " + taskname + ": bot exception: " + exception;
                 }
                 break;
 
@@ -103,7 +111,7 @@ public class JobResults {
                 String word = strings[0];
                 String key = strings[1];
                 String wordkey = word + "," + key;
-                if (error == null) {
+                if (exception == null) {
                     if (getResponse() != null) {
                         String goodResponse = BotAlgorhitms.decryptWord(word, key);
                         String checkResponse = (String) getResponse();
@@ -115,6 +123,8 @@ public class JobResults {
                     } else {
                         error = botname + " : " + taskname + ": risposta nulla: req->" + wordkey + " resp->null";
                     }
+                }else{
+                    error = botname + " : " + taskname + ": bot exception: " + exception;
                 }
                 break;
 

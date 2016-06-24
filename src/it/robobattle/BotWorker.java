@@ -104,9 +104,9 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
      *
      * @param results un oggetto JobResults da riempire con i risultati dei singoli task
      */
-    private void doJob(JobResults results) {
+    private synchronized void doJob(JobResults results) {
         long t1;
-        String request;
+        String request=null;
         String response=null;
         int sum=0;
         String error=null;
