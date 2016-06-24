@@ -19,7 +19,7 @@ public class TabelloneModel extends AbstractTableModel {
 
     @Override
     public int getRowCount() {
-        return battle.getBots().size();
+        return battle.getResults().size();
     }
 
     @Override
@@ -29,12 +29,16 @@ public class TabelloneModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int row, int col) {
+        BotResults results = battle.getResults().get(row);
 
         if (col == botsColumn) {
-            return battle.getBots().get(row);
+            return results.getBot();
         }
 
-        return "ciao";
+        Tests test=Tests.values()[col - 1];
+        TestSessionResult tr = results.getResult(test);
+
+        return tr;
     }
 
     @Override
@@ -55,6 +59,6 @@ public class TabelloneModel extends AbstractTableModel {
             return Bot.class;
         }
 
-        return String.class;
+        return TestSessionResult.class;
     }
 }

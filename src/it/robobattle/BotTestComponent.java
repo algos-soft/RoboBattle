@@ -26,6 +26,7 @@ public class BotTestComponent extends JPanel {
     private BotWorker worker;
     private JTextField errField;
 
+    private TestSessionResult sessionResult;
 
     /**
      * Costruttore.
@@ -135,10 +136,10 @@ public class BotTestComponent extends JPanel {
 
     /**
      * Invocato ogni volta che un worker finisce il suo lavoro o viene abortito.
-     * @param results i risultati della sessione
+     * @param result i risultati della sessione
      */
-    public void workerFinished() {
-        //disqualified=worker.getSessionResults();
+    public void workerFinished(TestSessionResult result) {
+        sessionResult=result;
         running = false;
     }
 
@@ -183,4 +184,7 @@ public class BotTestComponent extends JPanel {
         return errField;
     }
 
+    public TestSessionResult getSessionResult() {
+        return sessionResult;
+    }
 }

@@ -4,19 +4,22 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import javax.swing.*;
 
 public class RoboBattle extends CenteredFrame {
 
 	private ArrayList<Bot> bots;
+	private ArrayList<BotResults> results;
 	private JButton bStart;
 	private final Tabellone tabellone;
 
 	public RoboBattle() {
 		super();
 		setTitle("RoboBattle");
-		setPreferredSize(new Dimension(700, 560));
+		setPreferredSize(new Dimension(900, 560));
 		
 		tabellone = new Tabellone(this);
 		JScrollPane scroller = new JScrollPane(tabellone);
@@ -31,6 +34,13 @@ public class RoboBattle extends CenteredFrame {
 		bots.add(new GigaBot());
 		bots.add(new MegaBot());
 		bots.add(new KiloBot());
+
+		// lista dei bot con relativi risultati
+		results=new ArrayList<BotResults>();
+		for(Bot bot : bots){
+			results.add(new BotResults(bot));
+		}
+
 
 	}
 
@@ -51,7 +61,7 @@ public class RoboBattle extends CenteredFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				Bot bot = getSelectedBot();
 				if(bot != null){
-					new Arena(bot);
+					new Arena(bot, RoboBattle.this);
 				}
 			}
 		});
@@ -100,9 +110,29 @@ public class RoboBattle extends CenteredFrame {
 		return bStart;
 	}
 
+	public ArrayList<BotResults> getResults() {
+		return results;
+	}
+
+
+	public BotResults getResult(Bot bot){
+		BotResults result=null;
+		for(BotResults r : results){
+			if(r.getBot().equals(bot)){
+				result=r;
+				break;
+			}
+		}
+		return result;
+	}
+
 	public static void main(String[] args) {
 		RoboBattle b = new RoboBattle();
 		b.pack();
 		b.setVisible(true);
+	}
+
+	public void refreshTable() {
+		tabellone.refresh();
 	}
 }

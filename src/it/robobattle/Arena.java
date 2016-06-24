@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
+import java.util.HashMap;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -14,14 +15,17 @@ public class Arena extends CenteredFrame {
     public static int DEFAULT_REQ_PER_SESSION = 10000000;
 
     private Bot bot;
+    private RoboBattle battle;
     private JProgressBar bar1;
     private JLabel labelStatus1;
     private JSlider speedSlider;
     private JLabel labelSpeed;
+    private HashMap<Tests, BotTestComponent> components=new HashMap();
 
-    public Arena(Bot bot) {
+    public Arena(Bot bot, RoboBattle battle) {
         super();
         this.bot=bot;
+        this.battle=battle;
 
         setTitle(bot.getNome());
 
@@ -54,67 +58,68 @@ public class Arena extends CenteredFrame {
         panTests.setLayout(layout);
 
         for(Tests test : Tests.values()){
-            Component comp = new BotTestComponent(bot, test, this);
+            BotTestComponent comp = new BotTestComponent(bot, test, this);
+            components.put(test, comp);
             panTests.add(comp);
         }
 
         return panTests;
     }
 
-    private Component creaPanBattle() {
-        JPanel panBattle = new JPanel();
-        panBattle.setBackground(Color.YELLOW);
-        panBattle.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        BoxLayout layout = new BoxLayout(panBattle, BoxLayout.Y_AXIS);
-        panBattle.setLayout(layout);
+//    private Component creaPanBattle() {
+//        JPanel panBattle = new JPanel();
+//        panBattle.setBackground(Color.YELLOW);
+//        panBattle.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+//        BoxLayout layout = new BoxLayout(panBattle, BoxLayout.Y_AXIS);
+//        panBattle.setLayout(layout);
+//
+//        JPanel pBots = new JPanel();
+//        pBots.setLayout(new GridLayout(0, 2, 10, 10));
+//        pBots.add(new BotComponent(bot));
+//        pBots.add(bar1);
+//        pBots.add(new CompStatus(labelStatus1, bot));
+//
+//        speedSlider.setValue(DEFAULT_REQ_PER_SESSION / 2);
+//        updateSliderText();
+//
+//        panBattle.add(pBots);
+//        panBattle.add(labelSpeed);
+//        panBattle.add(speedSlider);
+//
+//        return panBattle;
+//    }
 
-        JPanel pBots = new JPanel();
-        pBots.setLayout(new GridLayout(0, 2, 10, 10));
-        pBots.add(new BotComponent(bot));
-        pBots.add(bar1);
-        pBots.add(new CompStatus(labelStatus1, bot));
-
-        speedSlider.setValue(DEFAULT_REQ_PER_SESSION / 2);
-        updateSliderText();
-
-        panBattle.add(pBots);
-        panBattle.add(labelSpeed);
-        panBattle.add(speedSlider);
-
-        return panBattle;
-    }
-
-    /**
-     * Componente con label status e bottone info
-     */
-    private class CompStatus extends JPanel{
-        public CompStatus(JLabel label, final Bot bot) {
-            BoxLayout layout = new BoxLayout(this, BoxLayout.X_AXIS);
-            setLayout(layout);
-            add(label);
-
-            JButton button = new JButton("info");
-            button.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    BotWorker worker=null;
-                    if(worker!=null){
-                        //String info = worker.getSessionInfo();
-                        JOptionPane pane = new JOptionPane("Qui le informazioni");
-                        JDialog dialog = new JDialog();
-                        dialog.add(pane);
-                        dialog.setModal(false);
-                        dialog.pack();
-                        dialog.setVisible(true);
-                    }
-                }
-            });
-
-            add(button);
-            label.setPreferredSize(new Dimension(220, 20));
-            label.setMaximumSize(new Dimension(1000,10));
-        }
-    }
+//    /**
+//     * Componente con label status e bottone info
+//     */
+//    private class CompStatus extends JPanel{
+//        public CompStatus(JLabel label, final Bot bot) {
+//            BoxLayout layout = new BoxLayout(this, BoxLayout.X_AXIS);
+//            setLayout(layout);
+//            add(label);
+//
+//            JButton button = new JButton("info");
+//            button.addActionListener(new ActionListener() {
+//                @Override
+//                public void actionPerformed(ActionEvent e) {
+//                    BotWorker worker=null;
+//                    if(worker!=null){
+//                        //String info = worker.getSessionInfo();
+//                        JOptionPane pane = new JOptionPane("Qui le informazioni");
+//                        JDialog dialog = new JDialog();
+//                        dialog.add(pane);
+//                        dialog.setModal(false);
+//                        dialog.pack();
+//                        dialog.setVisible(true);
+//                    }
+//                }
+//            });
+//
+//            add(button);
+//            label.setPreferredSize(new Dimension(220, 20));
+//            label.setMaximumSize(new Dimension(1000,10));
+//        }
+//    }
 
 
     private void updateSliderText() {
@@ -169,6 +174,17 @@ public class Arena extends CenteredFrame {
         JButton bStartSync=new JButton("Start all Sync");
         JButton bStartAsync=new JButton("Start all Async");
         JButton bConfResult=new JButton("Conferma risultati");
+        bConfResult.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                BotResults r = battle.getResult(bot);
+                for(BotTestComponent comp : components.values()){
+                    r.putResult(comp.getTest(), comp.getSessionResult());
+                }
+                dispose();
+                battle.refreshTable();
+            }
+        });
 
 
         JPanel panBottoni=new JPanel();

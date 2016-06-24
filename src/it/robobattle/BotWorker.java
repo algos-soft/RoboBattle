@@ -15,6 +15,8 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
     private Random random = new Random();    // random generator
     private boolean finished;    // se l'elaborazione è terminata
 
+    private TestSessionResult sessionResult;
+
 
     public BotWorker(BotTestComponent testComp) {
         super();
@@ -41,15 +43,14 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
         long totErrors = 0;
 
         long lastUpdateMillis = 0;
-        long totTimeNanos = 0;
 
+        sessionResult=new TestSessionResult(testComp.getBot(), testComp.getTest());
 
         while (!stop) {
 
             // fa eseguire una operazione al bot
-            JobResults result = new JobResults();
+            JobResults result = new JobResults(testComp.getBot());
             doJob(result);
-            totTimeNanos += result.getNanos();
 
             // controlla e convalida i risultati
             result.validate();
@@ -62,10 +63,17 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
 
             totRichiesteElaborate++;
 
+            // aggiorna i risultati di sessione
+            sessionResult.addNanos(result.getNanos());
+            sessionResult.addWordCount(1);
+            if (!result.isValid()) {
+                sessionResult.addErrCount(1);
+            }
+
             // ogni tanto pubblica lo stato di avanzamento
             long elapsedSinceLastUpdate = System.currentTimeMillis() - lastUpdateMillis;
             if (elapsedSinceLastUpdate > 250) {
-                JobStatus status = new JobStatus(totRichiesteElaborate, totTimeNanos / 1000000, totErrors);
+                JobStatus status = new JobStatus(totRichiesteElaborate, sessionResult.getNanos()/1000000, totErrors);
                 publish(status);
                 lastUpdateMillis = System.currentTimeMillis();
             }
@@ -73,7 +81,7 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
             // quando ha elaborato tutte le righieste previste si ferma
             if (totRichiesteElaborate >= totRequests) {
                 finished = true;
-                JobStatus status = new JobStatus(totRichiesteElaborate, totTimeNanos / 1000000, totErrors);
+                JobStatus status = new JobStatus(totRichiesteElaborate, sessionResult.getNanos() / 1000000, totErrors);
                 publish(status);
                 stop = true;
             }
@@ -169,7 +177,7 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
     protected void done() {
         getBar().setForeground(Color.red);
         getBar().setString("Terminato!");
-        testComp.workerFinished();
+        testComp.workerFinished(sessionResult);
     }
 
 
@@ -202,149 +210,7 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
         return testComp.getLabelStatus();
     }
 
-
-    /**
-     * Classe che rappresenta i risultati di un test
-     */
-    public class JobResults {
-
-        private Tests test;
-        private long nanos;
-        private Object request;
-        private Object response;
-        private boolean valid;
-        private String error;
-        private int errCount = 0;
-
-        public JobResults() {
-        }
-
-        public void put(Tests test, long nanos, Object request, Object response) {
-            this.test = test;
-            this.nanos = nanos;
-            this.request = request;
-            this.response = response;
-        }
-
-        /**
-         * Aggiunge tempo al task esistente.
-         *
-         * @param nanos i nanos da aggiungere
-         */
-        public void addNanos(long nanos) {
-            this.nanos+=nanos;
-        }
-
-
-        /**
-         * Convalida tutti i risultati.
-         * Esegue i task con gli algoritmi verificati.
-         * Accende il flag valido su ogni task valido.
-         * Regola il testo d errore su ogni task non valido.
-         */
-        public void validate() {
-            String botname = getBot().getNome();
-
-
-            String request;
-            String taskname;
-            switch (test) {
-
-
-                case SORT_WORD:
-                    taskname = test.getTestName();
-                    request = (String)getRequest();
-                    if (getResponse() != null) {
-                        String goodResponse = BotAlgorhitms.sortWord(request);
-                        String checkResponse = (String)getResponse();
-                        if (checkResponse.equals(goodResponse)) {
-                            valid=true;
-                        } else {
-                            error=botname + " : " + taskname + ": risposta non valida: req->" + request + " resp->" + checkResponse + " good->" + goodResponse;
-                        }
-                    } else {
-                        error=botname + " : " + taskname + ": risposta nulla: req->" + request + " resp->null";
-                    }
-                    break;
-
-
-                case INVERT_WORD:
-                    taskname = test.getTestName();
-                    request = (String)getRequest();
-                    if (getResponse() != null) {
-                        String goodResponse = BotAlgorhitms.invertWord(request);
-                        String checkResponse = (String)getResponse();
-                        if (checkResponse.equals(goodResponse)) {
-                            valid=true;
-                        } else {
-                            error=botname + " : " + taskname + ": risposta non valida: req->" + request + " resp->" + checkResponse + " good->" + goodResponse;
-                        }
-                    } else {
-                        error=botname + " : " + taskname + ": risposta nulla: req->" + request + " resp->null";
-                    }
-                    break;
-
-                case CALC_CKECKSUM:
-                    taskname = test.getTestName();
-                    request = (String)getRequest();
-                    if (getResponse() != null) {
-                        int goodResponse = BotAlgorhitms.calcChecksum(request);
-                        int checkResponse = (Integer)getResponse();
-                        if (checkResponse == goodResponse) {
-                            valid=true;
-                        } else {
-                            error=botname + " : " + taskname + ": risposta non valida: req->" + request + " resp->" + checkResponse + " good->" + goodResponse;
-                        }
-                    } else {
-                        error=botname + " : " + taskname + ": risposta nulla: req->" + request + " resp->null";
-                    }
-                    break;
-
-                case DECRYPT_WORD:
-                    taskname = test.getTestName();
-                    String[] strings = (String[])getRequest();
-                    String word = strings[0];
-                    String key = strings[1];
-                    String wordkey = word + "," + key;
-                    if (getResponse() != null) {
-                        String goodResponse = BotAlgorhitms.decryptWord(word, key);
-                        String checkResponse = (String)getResponse();
-                        if (checkResponse.equals(goodResponse)) {
-                            valid=true;
-                        } else {
-                            error=botname + " : " + taskname + ": risposta non valida: req->" + wordkey + " resp->" + checkResponse + " good->" + goodResponse;
-                        }
-                    } else {
-                        error=botname + " : " + taskname + ": risposta nulla: req->" + wordkey + " resp->null";
-                    }
-                    break;
-
-            }
-        }
-
-        /**
-         * Controlla se il risultato è valido.
-         *
-         * @return true se valido
-         */
-        public boolean isValid() {
-            return valid==true;
-        }
-
-        public Object getResponse() {
-            return response;
-        }
-
-        public Object getRequest() {
-            return request;
-        }
-
-        public long getNanos() {
-            return nanos;
-        }
-
-        public String getError() {
-            return error;
-        }
+    public TestSessionResult getSessionResult() {
+        return sessionResult;
     }
 }

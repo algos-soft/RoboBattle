@@ -21,6 +21,8 @@ public class Tabellone extends JTable {
         setModel(model);
 
         setDefaultRenderer(Bot.class, new BotCompRendererer());
+        setDefaultRenderer(TestSessionResult.class, new ResultCompRendererer());
+
 
         setRowHeight(100);
 
@@ -28,7 +30,7 @@ public class Tabellone extends JTable {
 
         //setRowSelectionAllowed(false);
 
-        getColumnModel().getColumn(0).setPreferredWidth(300);
+        getColumnModel().getColumn(0).setPreferredWidth(200);
 
 //        int numCols=getColumnModel().getColumnCount();
 //        for(int i=0; i<numCols-1; i++){
@@ -47,5 +49,7 @@ public class Tabellone extends JTable {
     }
 
 
-
+    public void refresh() {
+        model.fireTableDataChanged();
+    }
 }
