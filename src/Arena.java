@@ -17,9 +17,6 @@ public class Arena extends CenteredFrame {
     private JSlider speedSlider;
     private JLabel labelSpeed;
 
-    private JButton bStart;
-
-
     public Arena(Bot bot) {
         super();
         this.bot=bot;
@@ -28,7 +25,6 @@ public class Arena extends CenteredFrame {
 
         bar1 = new JProgressBar(0, 100);
 
-
         labelStatus1 = new JLabel();
 
         labelSpeed = new JLabel("", SwingConstants.CENTER);
@@ -36,14 +32,6 @@ public class Arena extends CenteredFrame {
         labelSpeed.setFont(new Font("", Font.BOLD, 16));
         labelSpeed.setForeground(Color.BLUE);
         labelSpeed.setBorder(BorderFactory.createEmptyBorder(40, 20, 10, 20));
-
-//		labelWinner=new JLabel("",SwingConstants.CENTER);
-//		labelWinner.setAlignmentX(CENTER_ALIGNMENT);
-//		labelWinner.setFont(new Font("", Font.BOLD, 16));
-//		labelWinner.setForeground(Color.RED);
-//		labelWinner.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
-
-        bStart = new JButton("Start!");
 
         add(new BotComponent(bot), BorderLayout.PAGE_START);
         add(creaCompTests());
@@ -176,9 +164,19 @@ public class Arena extends CenteredFrame {
         });
         updateSliderText();
 
+        JButton bStartSync=new JButton("Start all Sync");
+        JButton bStartAsync=new JButton("Start all Async");
+        JButton bConfResult=new JButton("Conferma risultati");
+
+
+        JPanel panBottoni=new JPanel();
+        panBottoni.add(bStartSync);
+        panBottoni.add(bStartAsync);
+        panBottoni.add(bConfResult);
 
         panel.add(speedSlider);
-        panel.add(bStart);
+        panel.add(panBottoni);
+
 
 
         return panel;

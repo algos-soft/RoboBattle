@@ -4,6 +4,7 @@ import java.util.Arrays;
  * Tester delle implementazioni di Bot.
  */
 public class BotTester {
+
     private Bot bot;
     int logLevel=0;
 
@@ -12,7 +13,7 @@ public class BotTester {
         logLevel=2; // max
     }
 
-    public void startTest(){
+    public void startTest(Tests test){
 
         int quanteElab=0;
         int quanteOK=0;
@@ -21,11 +22,45 @@ public class BotTester {
         String[] strings = creaStringhe();
         for(String word : strings){
             i++;
-            String expected = BotAlgorhitms.sortWord(word);
 
-            long jobStartNanos=System.nanoTime();
-            String obtained = bot.sortWord(word);
-            long jobLengthNano=System.nanoTime()-jobStartNanos;
+
+            long jobStartNanos=0;
+            long jobLengthNano=0;
+            Object expected=null;
+            Object obtained=null;
+            switch (test){
+
+                case SORT_WORD:
+                    expected = BotAlgorhitms.sortWord(word);
+                    jobStartNanos=System.nanoTime();
+                    obtained = bot.sortWord(word);
+                    jobLengthNano=System.nanoTime()-jobStartNanos;
+                    break;
+
+                case INVERT_WORD:
+                    expected = BotAlgorhitms.invertWord(word);
+                    jobStartNanos=System.nanoTime();
+                    obtained = bot.invertWord(word);
+                    jobLengthNano=System.nanoTime()-jobStartNanos;
+                    break;
+
+                case CALC_CKECKSUM:
+                    expected = BotAlgorhitms.calcChecksum(word);
+                    jobStartNanos=System.nanoTime();
+                    obtained = bot.calcChecksum(word);
+                    jobLengthNano=System.nanoTime()-jobStartNanos;
+                    break;
+
+                case DECRYPT_WORD:
+                    String key = "abcd";
+                    expected = BotAlgorhitms.decryptWord(word, key);
+                    jobStartNanos=System.nanoTime();
+                    obtained = bot.decryptWord(word, key);
+                    jobLengthNano=System.nanoTime()-jobStartNanos;
+                    break;
+
+            }
+
             totNanos+=jobLengthNano;
 
             boolean passed=false;

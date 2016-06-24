@@ -108,18 +108,21 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
                 t1 = System.nanoTime();
                 response = getBot().sortWord(request);
                 results.put(Tests.SORT_WORD, System.nanoTime() - t1, request, response);
+                break;
 
             case INVERT_WORD:
                 request = getRandomString();
                 t1 = System.nanoTime();
                 response = getBot().invertWord(request);
                 results.put(Tests.INVERT_WORD, System.nanoTime() - t1, request, response);
+                break;
 
             case CALC_CKECKSUM:
                 request = getRandomString();
                 t1 = System.nanoTime();
                 sum = getBot().calcChecksum(request);
                 results.put(Tests.CALC_CKECKSUM, System.nanoTime() - t1, request, sum);
+                break;
 
             case DECRYPT_WORD:
                 request = getRandomString();
@@ -129,6 +132,7 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
                 long nanos = System.nanoTime() - t1;
                 String[] strings = {request, key};
                 results.put(Tests.DECRYPT_WORD, nanos, strings, response);
+                break;
 
         }
 

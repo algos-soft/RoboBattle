@@ -21,6 +21,10 @@ public class MegaBot extends BotAdapter {
 		return Color.CYAN;
 	}
 
+	@Override
+	public String sortWord(String in) {
+		return BotAlgorhitms.sortWordErr(in);
+	}
 
 
 	public String rispondi(String in) {
