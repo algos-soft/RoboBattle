@@ -1,3 +1,5 @@
+package it.robobattle;
+
 /**
  * Created by alex on 16/06/16.
  */

@@ -1,3 +1,5 @@
+package it.robobattle;
+
 import java.awt.*;
 
 /**

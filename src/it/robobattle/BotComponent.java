@@ -1,5 +1,6 @@
+package it.robobattle;
+
 import javax.swing.*;
-import javax.swing.border.BevelBorder;
 import java.awt.*;
 
 public class BotComponent extends JPanel {

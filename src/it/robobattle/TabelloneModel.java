@@ -1,4 +1,5 @@
-import javax.swing.*;
+package it.robobattle;
+
 import javax.swing.table.AbstractTableModel;
 
 /**

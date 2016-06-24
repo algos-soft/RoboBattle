@@ -1,9 +1,10 @@
+package it.robobattle;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -176,8 +177,8 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
      * Ritorna una stringa random dal pool delle stringhe.
      */
     private String getRandomString() {
-        int rnd = random.nextInt(Bot.STRINGHE.length);
-        return Bot.STRINGHE[rnd];
+        int rnd = random.nextInt(Data.STRINGHE.length);
+        return Data.STRINGHE[rnd];
     }
 
 

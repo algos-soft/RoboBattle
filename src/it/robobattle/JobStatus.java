@@ -1,3 +1,5 @@
+package it.robobattle;
+
 /**
  * Wrapper per trasportare le informazioni di stato avanzamento
  */
