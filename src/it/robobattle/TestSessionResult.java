@@ -7,6 +7,7 @@ package it.robobattle;
 public class TestSessionResult {
     private Tests test;
     private Bot bot;
+    private int points;
 
     private long wordcount;
     private long errcount;
@@ -67,4 +68,11 @@ public class TestSessionResult {
         return nanos/1000000000f;
     }
 
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
 }

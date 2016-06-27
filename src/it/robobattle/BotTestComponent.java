@@ -27,6 +27,7 @@ public class BotTestComponent extends JPanel {
     private JTextField errField;
 
     private TestSessionResult sessionResult;
+    private final JButton bStart;
 
     /**
      * Costruttore.
@@ -52,7 +53,7 @@ public class BotTestComponent extends JPanel {
         bar.setPreferredSize(new Dimension(200, 50));
         bar.setStringPainted(true);
 
-        JButton bStart = new JButton("Start");
+        bStart = new JButton("Start");
         bStart.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -83,11 +84,14 @@ public class BotTestComponent extends JPanel {
      */
     private void startOrStop() {
         if(!running){
+            bStart.setText("Stop");
             worker = new BotWorker(this);
             worker.execute();
             running=true;
             stopped=false;
+
         }else{
+            bStart.setText("Start");
             stopped=true;
             running=false;
         }
@@ -102,6 +106,7 @@ public class BotTestComponent extends JPanel {
         JLabel iterLabel = new JLabel("iter ");
         iterField = new JTextField();
         iterField.setEditable(false);
+        iterField.setBackground(Color.WHITE);
         iterField.setMinimumSize(new Dimension(90, 30));
         iterField.setPreferredSize(new Dimension(90, 30));
         iterField.setMaximumSize(new Dimension(90, 30));
@@ -110,6 +115,7 @@ public class BotTestComponent extends JPanel {
 
         timeField = new JTextField();
         timeField.setEditable(false);
+        timeField.setBackground(Color.WHITE);
         timeField.setMinimumSize(new Dimension(60, 30));
         timeField.setPreferredSize(new Dimension(60, 30));
         timeField.setMaximumSize(new Dimension(60, 30));
@@ -118,6 +124,7 @@ public class BotTestComponent extends JPanel {
 
         errField = new JTextField();
         errField.setEditable(false);
+        errField.setBackground(Color.WHITE);
         errField.setMinimumSize(new Dimension(90, 30));
         errField.setPreferredSize(new Dimension(90, 30));
         errField.setMaximumSize(new Dimension(90, 30));

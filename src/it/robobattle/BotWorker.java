@@ -1,9 +1,12 @@
 package it.robobattle;
 
+import javafx.scene.paint.*;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.Color;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Random;
@@ -57,7 +60,8 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
 
             // se i risultati non sono validi, logga gli errori
             if (!result.isValid()) {
-                System.out.println(result.getError());
+                String err = result.getError();
+                //System.out.println(err);
                 totErrors++;
             }
 
@@ -105,10 +109,11 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
      * @param results un oggetto JobResults da riempire con i risultati dei singoli task
      */
     private synchronized void doJob(JobResults results) {
-        long t1;
+        long t1, dt;
         String request=null;
         String response=null;
         int sum=0;
+        dt=0;
         String error=null;
 
         switch (getTest()) {
@@ -121,7 +126,8 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
                 }catch (Exception e){
                     error=e.getMessage();
                 }
-                results.setData(Tests.SORT_WORD, System.nanoTime() - t1, request, response, error);
+                dt=System.nanoTime()-t1;
+                results.setData(Tests.SORT_WORD, dt, request, response, error);
                 break;
 
             case INVERT_WORD:
@@ -132,7 +138,8 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
                 }catch (Exception e){
                     error=e.getMessage();
                 }
-                results.setData(Tests.INVERT_WORD, System.nanoTime() - t1, request, response, error);
+                dt=System.nanoTime()-t1;
+                results.setData(Tests.INVERT_WORD, dt, request, response, error);
                 break;
 
             case CALC_CKECKSUM:
@@ -143,7 +150,8 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
                 }catch (Exception e){
                     error=e.getMessage();
                 }
-                results.setData(Tests.CALC_CKECKSUM, System.nanoTime() - t1, request, sum, error);
+                dt=System.nanoTime()-t1;
+                results.setData(Tests.CALC_CKECKSUM, dt, request, sum, error);
                 break;
 
             case DECRYPT_WORD:
@@ -155,9 +163,9 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
                 }catch (Exception e){
                     error=e.getMessage();
                 }
-                long nanos = System.nanoTime() - t1;
+                dt=System.nanoTime()-t1;
                 String[] strings = {request, key};
-                results.setData(Tests.DECRYPT_WORD, nanos, strings, response, error);
+                results.setData(Tests.DECRYPT_WORD, dt, strings, response, error);
                 break;
 
         }
@@ -180,20 +188,22 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
             testComp.getTimeField().setText(stime);
             testComp.getErrField().setText(serr);
 
-            Color c;
-            if (percent < 75) {
-                c = Color.green;
-            } else {
-                c = Color.orange;
+            // campo num errori in rosso se ce ne sono
+            Color bg=Color.white;
+            Color fg=Color.black;
+            if(s.getNumErrors()>0) {
+                bg=Color.red;
+                fg= Color.white;
             }
-            getBar().setForeground(c);
+            testComp.getErrField().setBackground(bg);
+            testComp.getErrField().setForeground(fg);
+
 
         }
     }
 
     @Override
     protected void done() {
-        getBar().setForeground(Color.red);
         getBar().setString("Terminato!");
         testComp.workerFinished(sessionResult);
     }

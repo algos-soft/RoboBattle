@@ -31,7 +31,22 @@ public class RoboBot implements Bot {
 
 	@Override
 	public int calcChecksum(String in) {
-		return 5/0;
+		Object s = "ciao";
+		Integer b=(Integer)s;
+		return b;
+
+//		int a = 5;
+//		int b=0;
+//		int c=a/b;
+//		return c;
+
+//		int checksum=0;
+//		char[] chars = in.toCharArray();
+//		for(char c: chars){
+//			checksum+=(int)c;
+//		}
+//		return checksum;
+
 	}
 
 	@Override

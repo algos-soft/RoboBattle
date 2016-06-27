@@ -67,6 +67,16 @@ public class RoboBattle extends CenteredFrame {
 		});
 		panel.add(bStart);
 
+		JButton bClassifica = new JButton("Classifica");
+		bClassifica.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				calcClassifica();
+			}
+		});
+		panel.add(bClassifica);
+
+
 		JButton bEsci = new JButton("Esci");
 		bEsci.addActionListener(new ActionListener() {
 
@@ -79,6 +89,26 @@ public class RoboBattle extends CenteredFrame {
 
 
 		return panel;
+	}
+
+	/**
+	 * Calcola la classifica dei bot e la scrive nei dati
+	 */
+	private void calcClassifica() {
+		int j=0;
+		for(Tests test : Tests.values()){
+			for(int i=0; i<results.size(); i++){
+				j++;
+				BotResults res = results.get(i);
+				TestSessionResult sessRes=res.getResult(test);
+				if(sessRes!=null){
+					sessRes.setPoints(j);
+				}
+			}
+		}
+
+		refreshTable();
+
 	}
 
 

@@ -5,6 +5,7 @@ import java.awt.*;
 import java.text.NumberFormat;
 
 /**
+ * Componente che rappresenta un risultato in una cella della JTable.
  * Created by alex on 24/06/16.
  */
 public class ResultComponent extends JPanel {
@@ -27,9 +28,15 @@ public class ResultComponent extends JPanel {
             snum = NumberFormat.getIntegerInstance().format(result.getErrcount());
             JLabel labelErr=new JLabel(snum + " errors");
 
+            int pts = result.getPoints();
+            JLabel labelPts=new JLabel(pts + " points");
+            labelPts.setBorder(BorderFactory.createEmptyBorder(10,0,0,0));
+            labelPts.setForeground(Color.BLUE);
+
             add(labelTime);
             add(labelIter);
             add(labelErr);
+            add(labelPts);
 
             if(result.getErrcount()>0){
                 labelErr.setOpaque(true);
