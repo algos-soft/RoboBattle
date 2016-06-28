@@ -1,10 +1,7 @@
 package it.robobattle;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -18,6 +15,7 @@ public class RoboBattle extends CenteredFrame {
 	private ArrayList<BotResults> results;
 	private JButton bStart;
 	private final Tabellone tabellone;
+	private ArenaSettings arenaSettings;
 
 	public RoboBattle() {
 		super();
@@ -83,7 +81,23 @@ public class RoboBattle extends CenteredFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				Bot bot = getSelectedBot();
 				if(bot != null){
-					new Arena(bot, RoboBattle.this);
+					if(arenaSettings==null){
+						arenaSettings=new ArenaSettings();
+					}
+
+					final Arena arena = new Arena(bot, RoboBattle.this, arenaSettings);
+
+					// quando chiudo la finestra sovrascrive i settings
+					arena.addWindowListener(new WindowAdapter() {
+						@Override
+						public void windowClosed(WindowEvent e) {
+							arenaSettings.setSliderValue(arena.getSpeedSlider().getValue());
+							for(Tests test : Tests.values()){
+								BotTestComponent comp=arena.getTestComponent(test);
+								arenaSettings.setTestEnabled(test,comp.isTestEnabled());
+							}
+						}
+					});
 				}
 			}
 		});

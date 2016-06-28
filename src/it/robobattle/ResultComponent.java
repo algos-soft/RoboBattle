@@ -12,6 +12,9 @@ public class ResultComponent extends JPanel {
 
     public ResultComponent(TestSessionResult result) {
 
+        setBackground(new Color(204,204,255));
+
+
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 

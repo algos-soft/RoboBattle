@@ -234,10 +234,6 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
         return testComp.getBar();
     }
 
-    public JLabel getLabelStatus() {
-        return testComp.getLabelStatus();
-    }
-
     public TestSessionResult getSessionResult() {
         return sessionResult;
     }

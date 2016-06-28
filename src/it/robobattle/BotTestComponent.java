@@ -19,7 +19,6 @@ public class BotTestComponent extends JPanel {
     private boolean running=false;
     private boolean stopped = false;
     private final JProgressBar bar;
-    private JLabel labelStatus;
     private Arena arena;
     private JTextField iterField;
     private JTextField timeField;
@@ -29,6 +28,7 @@ public class BotTestComponent extends JPanel {
     private TestSessionResult sessionResult;
     private final JButton bStart;
     private TestFinished finishedListener;
+    private final JCheckBox checkEnabled;
 
     /**
      * Costruttore.
@@ -45,9 +45,10 @@ public class BotTestComponent extends JPanel {
         setLayout(layout);
         setBorder(BorderFactory.createEmptyBorder(10,0,10,0));
 
-        JLabel labelTest = new JLabel(test.getTestName());
-        labelTest.setMinimumSize(new Dimension(120, 0));
-        labelTest.setPreferredSize(new Dimension(120, 0));
+        checkEnabled = new JCheckBox(test.getTestName());
+        checkEnabled.setSelected(true);
+        checkEnabled.setMinimumSize(new Dimension(140, 0));
+        checkEnabled.setPreferredSize(new Dimension(140, 0));
 
         bar = new JProgressBar(0, 100);
         bar.setMinimumSize(new Dimension(20, 50));
@@ -64,19 +65,13 @@ public class BotTestComponent extends JPanel {
 
         Component compResult=createCompResult();
 
-        labelStatus=new JLabel();
-        labelStatus.setMinimumSize(new Dimension(100, 30));
-        labelStatus.setPreferredSize(new Dimension(100, 30));
-        labelStatus.setMaximumSize(new Dimension(100, 30));
-
-        add(labelTest);
-        add(Box.createRigidArea(new Dimension(10,0)));
+        add(checkEnabled);
+        add(Box.createRigidArea(new Dimension(10, 0)));
         add(bar);
         add(Box.createRigidArea(new Dimension(10,0)));
         add(bStart);
         add(Box.createRigidArea(new Dimension(10,0)));
         add(compResult);
-        add(labelStatus);
 
     }
 
@@ -169,16 +164,8 @@ public class BotTestComponent extends JPanel {
         return bar;
     }
 
-//    public void setBot(Bot bot) {
-//        this.bot = bot;
-//    }
-
     public Tests getTest() {
         return test;
-    }
-
-    public JLabel getLabelStatus() {
-        return labelStatus;
     }
 
     public Arena getArena() {
@@ -208,5 +195,15 @@ public class BotTestComponent extends JPanel {
     public interface TestFinished{
         void testFinished();
     }
+
+    public boolean isTestEnabled(){
+        return checkEnabled.isSelected();
+    }
+
+    public void setTestEnabled(boolean enabled){
+        checkEnabled.setSelected(enabled);
+    }
+
+
 
 }
