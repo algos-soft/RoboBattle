@@ -1,13 +1,9 @@
-	package it.robobattle.bots;
+	package it.robobattle.it.robobattle.bots;
 
 	import it.robobattle.Bot;
 
 	import java.awt.Color;
 
-	/**
-	 * Eros Aldeghi
-	 * Corso Java abea giu-2016
-	 */
 public class Robot2LaVendetta implements Bot {
 		
 		private String szSort; // stringa di ritorno per il metodo sort.
@@ -30,7 +26,8 @@ public class Robot2LaVendetta implements Bot {
 		 * @return lo slogan del bot
 		 */
 		public String getSlogan(){
-			String getSlogan = "Non vincerà però distruggerà tutti";
+
+			String getSlogan = "Non vincer� per� distrugerra tutti";
 			return getSlogan;
 		}
 
@@ -98,7 +95,6 @@ public class Robot2LaVendetta implements Bot {
 		 */
 
 		public String sortWord(String in){
-
 			int lInTot = in.length(); 		// memorizza la lunghezza della stringa in arrivo.
 			char[] arr = in.toCharArray();	// popola un array di char con la parola in arrivo, SEMBRA IL PIU VELOCE !
 			

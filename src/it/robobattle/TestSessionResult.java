@@ -4,7 +4,7 @@ package it.robobattle;
  * Created by alex on 24/06/16.
  * Risultato complessivo di una sessione un singolo test.
  */
-public class TestSessionResult {
+public class TestSessionResult implements Comparable<TestSessionResult>{
     private Tests test;
     private Bot bot;
     private int points;
@@ -75,4 +75,24 @@ public class TestSessionResult {
     public void setPoints(int points) {
         this.points = points;
     }
+
+    @Override
+    public int compareTo(TestSessionResult other) {
+        int ret=0;
+        if(this.errcount==0 & other.errcount==0){   // no errors
+            Long thisnanos=new Long(this.nanos);
+            Long othernanos=new Long(other.nanos);
+            ret=thisnanos.compareTo(othernanos);
+        }else{
+            if(this.errcount==0 & other.errcount!=0){
+                ret = -1;
+            }else{
+                if(this.errcount!=0 & other.errcount==0){
+                    ret=1;
+                }
+            }
+        }
+        return ret;
+    }
+
 }

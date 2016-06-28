@@ -28,6 +28,7 @@ public class BotTestComponent extends JPanel {
 
     private TestSessionResult sessionResult;
     private final JButton bStart;
+    private TestFinished finishedListener;
 
     /**
      * Costruttore.
@@ -82,7 +83,7 @@ public class BotTestComponent extends JPanel {
     /**
      * invocato dal bottone start/stop
      */
-    private void startOrStop() {
+    public void startOrStop() {
         if(!running){
             bStart.setText("Stop");
             worker = new BotWorker(this);
@@ -148,6 +149,11 @@ public class BotTestComponent extends JPanel {
     public void workerFinished(TestSessionResult result) {
         sessionResult=result;
         running = false;
+        bStart.setText("Start");
+
+        if(finishedListener!=null){
+            finishedListener.testFinished();
+        }
     }
 
 
@@ -194,4 +200,13 @@ public class BotTestComponent extends JPanel {
     public TestSessionResult getSessionResult() {
         return sessionResult;
     }
+
+    public void setFinishedListener(TestFinished finishedListener) {
+        this.finishedListener = finishedListener;
+    }
+
+    public interface TestFinished{
+        void testFinished();
+    }
+
 }

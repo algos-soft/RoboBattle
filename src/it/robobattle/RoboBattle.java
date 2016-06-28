@@ -3,7 +3,10 @@ package it.robobattle;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -19,7 +22,7 @@ public class RoboBattle extends CenteredFrame {
 	public RoboBattle() {
 		super();
 		setTitle("RoboBattle");
-		setPreferredSize(new Dimension(900, 560));
+		setPreferredSize(new Dimension(960, 600));
 		
 		tabellone = new Tabellone(this);
 		JScrollPane scroller = new JScrollPane(tabellone);
@@ -40,6 +43,25 @@ public class RoboBattle extends CenteredFrame {
 		for(Bot bot : bots){
 			results.add(new BotResults(bot));
 		}
+
+
+		// mette il nome del bot nel bottone start quando clicco sulla table
+		tabellone.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Bot bot = getSelectedBot();
+				String text = "Start";
+				if (bot != null) {
+					text+=" "+bot.getNome();
+				}
+				bStart.setText(text);
+
+				if(e.getClickCount()==2){
+					bStart.doClick();
+				}
+			}
+		});
+
 
 
 	}
@@ -67,7 +89,7 @@ public class RoboBattle extends CenteredFrame {
 		});
 		panel.add(bStart);
 
-		JButton bClassifica = new JButton("Classifica");
+		JButton bClassifica = new JButton("Calc scores");
 		bClassifica.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -77,7 +99,7 @@ public class RoboBattle extends CenteredFrame {
 		panel.add(bClassifica);
 
 
-		JButton bEsci = new JButton("Esci");
+		JButton bEsci = new JButton("Quit");
 		bEsci.addActionListener(new ActionListener() {
 
 			@Override
@@ -97,14 +119,44 @@ public class RoboBattle extends CenteredFrame {
 	private void calcClassifica() {
 		int j=0;
 		for(Tests test : Tests.values()){
+
+			// creo una lista dei risultati di questo test per tutti i bots
+			ArrayList<TestSessionResult> sessionResults = new ArrayList<TestSessionResult>();
 			for(int i=0; i<results.size(); i++){
 				j++;
 				BotResults res = results.get(i);
 				TestSessionResult sessRes=res.getResult(test);
 				if(sessRes!=null){
-					sessRes.setPoints(j);
+					sessionResults.add(sessRes);
 				}
 			}
+
+			// ordino la lista per tempo più veloce (i risultati con errori in fondo)
+			Collections.sort(sessionResults);
+
+			// assegno i punteggi ai risultati
+			for(int i=0;i<sessionResults.size();i++){
+				TestSessionResult res = sessionResults.get(i);
+				int pts=0;
+				if(res.getErrcount()==0){
+					pts=results.size()-i;
+				}
+				res.setPoints(pts);
+			}
+
+
+		}
+
+		// aggiorno i totali
+		for(BotResults result : results){
+			int score=0;
+			for(Tests test : Tests.values()){
+				TestSessionResult sessResult=result.getResult(test);
+				if(sessResult!=null){
+					score+=sessResult.getPoints();
+				}
+			}
+			result.setScore(score);
 		}
 
 		refreshTable();
@@ -123,7 +175,7 @@ public class RoboBattle extends CenteredFrame {
 
 
 	private void esci() {
-		int risp = JOptionPane.showConfirmDialog(this, "Sei sicuro?", "Uscita",
+		int risp = JOptionPane.showConfirmDialog(this, "Are you sure?", "Quit",
 				JOptionPane.YES_NO_OPTION);
 
 		if (risp == JOptionPane.YES_OPTION) {

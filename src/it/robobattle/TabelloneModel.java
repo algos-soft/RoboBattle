@@ -10,11 +10,13 @@ public class TabelloneModel extends AbstractTableModel {
     private RoboBattle battle;
     private int totColumns;
     private int botsColumn;
+    private int pointsColumn;
 
     public TabelloneModel(RoboBattle battle) {
         this.battle = battle;
-        totColumns=Tests.values().length+1;
+        totColumns=Tests.values().length+2;
         botsColumn=0;
+        pointsColumn=totColumns-1;
     }
 
     @Override
@@ -35,6 +37,11 @@ public class TabelloneModel extends AbstractTableModel {
             return results.getBot();
         }
 
+        if (col == pointsColumn) {
+            return results.getScore();
+        }
+
+
         Tests test=Tests.values()[col - 1];
         TestSessionResult tr = results.getResult(test);
 
@@ -47,6 +54,11 @@ public class TabelloneModel extends AbstractTableModel {
             return "Bot";
         }
 
+        if (column == pointsColumn) {
+            return "Score";
+        }
+
+
         Tests test=Tests.values()[column - 1];
         return test.getTestName();
 
@@ -57,6 +69,10 @@ public class TabelloneModel extends AbstractTableModel {
 
         if (col == botsColumn) {
             return Bot.class;
+        }
+
+        if (col == pointsColumn) {
+            return Integer.class;
         }
 
         return TestSessionResult.class;

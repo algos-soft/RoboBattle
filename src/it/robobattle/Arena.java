@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.*;
@@ -16,11 +17,12 @@ public class Arena extends CenteredFrame {
 
     private Bot bot;
     private RoboBattle battle;
-    private JProgressBar bar1;
-    private JLabel labelStatus1;
     private JSlider speedSlider;
     private JLabel labelSpeed;
     private HashMap<Tests, BotTestComponent> components=new HashMap();
+
+    boolean compFinished=false;
+    int compInTest=0;
 
     public Arena(Bot bot, RoboBattle battle) {
         super();
@@ -28,10 +30,6 @@ public class Arena extends CenteredFrame {
         this.battle=battle;
 
         setTitle(bot.getNome());
-
-        bar1 = new JProgressBar(0, 100);
-
-        labelStatus1 = new JLabel();
 
         labelSpeed = new JLabel("", SwingConstants.CENTER);
         labelSpeed.setAlignmentX(CENTER_ALIGNMENT);
@@ -54,7 +52,7 @@ public class Arena extends CenteredFrame {
     private Component creaCompTests(){
         JPanel panTests = new JPanel();
         BoxLayout layout = new BoxLayout(panTests, BoxLayout.Y_AXIS);
-        panTests.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
+        panTests.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         panTests.setLayout(layout);
 
         for(Tests test : Tests.values()){
@@ -66,65 +64,11 @@ public class Arena extends CenteredFrame {
         return panTests;
     }
 
-//    private Component creaPanBattle() {
-//        JPanel panBattle = new JPanel();
-//        panBattle.setBackground(Color.YELLOW);
-//        panBattle.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-//        BoxLayout layout = new BoxLayout(panBattle, BoxLayout.Y_AXIS);
-//        panBattle.setLayout(layout);
-//
-//        JPanel pBots = new JPanel();
-//        pBots.setLayout(new GridLayout(0, 2, 10, 10));
-//        pBots.add(new BotComponent(bot));
-//        pBots.add(bar1);
-//        pBots.add(new CompStatus(labelStatus1, bot));
-//
-//        speedSlider.setValue(DEFAULT_REQ_PER_SESSION / 2);
-//        updateSliderText();
-//
-//        panBattle.add(pBots);
-//        panBattle.add(labelSpeed);
-//        panBattle.add(speedSlider);
-//
-//        return panBattle;
-//    }
-
-//    /**
-//     * Componente con label status e bottone info
-//     */
-//    private class CompStatus extends JPanel{
-//        public CompStatus(JLabel label, final Bot bot) {
-//            BoxLayout layout = new BoxLayout(this, BoxLayout.X_AXIS);
-//            setLayout(layout);
-//            add(label);
-//
-//            JButton button = new JButton("info");
-//            button.addActionListener(new ActionListener() {
-//                @Override
-//                public void actionPerformed(ActionEvent e) {
-//                    BotWorker worker=null;
-//                    if(worker!=null){
-//                        //String info = worker.getSessionInfo();
-//                        JOptionPane pane = new JOptionPane("Qui le informazioni");
-//                        JDialog dialog = new JDialog();
-//                        dialog.add(pane);
-//                        dialog.setModal(false);
-//                        dialog.pack();
-//                        dialog.setVisible(true);
-//                    }
-//                }
-//            });
-//
-//            add(button);
-//            label.setPreferredSize(new Dimension(220, 20));
-//            label.setMaximumSize(new Dimension(1000,10));
-//        }
-//    }
 
 
     private void updateSliderText() {
         String snum = NumberFormat.getIntegerInstance().format(+speedSlider.getValue());
-        labelSpeed.setText("Tot. " + snum + " richieste");
+        labelSpeed.setText("Tot. " + snum + " words");
     }
 
 
@@ -137,23 +81,6 @@ public class Arena extends CenteredFrame {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-
-//        bStart.addActionListener(new ActionListener() {
-//
-//            @Override
-//            public void actionPerformed(ActionEvent arg0) {
-//                if (!running) {
-//                    running = true;
-//                    stopped = false;
-//                    bStart.setText("Stop");
-//                    worker1 = new BotWorker(Arena.this, bot, bar1, labelStatus1);
-//                    worker1.execute();
-//                } else {
-//                    stopped = true;
-//                }
-//
-//            }
-//        });
 
         speedSlider = new JSlider();
         speedSlider.setMaximum(DEFAULT_REQ_PER_SESSION);
@@ -171,9 +98,29 @@ public class Arena extends CenteredFrame {
         });
         updateSliderText();
 
-        JButton bStartSync=new JButton("Start all Sync");
-        JButton bStartAsync=new JButton("Start all Async");
-        JButton bConfResult=new JButton("Conferma risultati");
+        JButton bStartSync=new JButton("Start all (sync)");
+        bStartSync.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                compInTest=-1;
+                startOneSync();
+                //startAllSync();
+            }
+        });
+
+
+        JButton bStartAsync=new JButton("Start all (async)");
+        bStartAsync.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                for (BotTestComponent comp : components.values()) {
+                    comp.startOrStop();
+                }
+            }
+        });
+
+
+        JButton bConfResult=new JButton("Save results");
         bConfResult.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -186,23 +133,48 @@ public class Arena extends CenteredFrame {
             }
         });
 
+        JButton bCancel=new JButton("Cancel");
+        bCancel.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        });
+
+
 
         JPanel panBottoni=new JPanel();
         panBottoni.add(bStartSync);
         panBottoni.add(bStartAsync);
         panBottoni.add(bConfResult);
+        panBottoni.add(bCancel);
 
         panel.add(speedSlider);
         panel.add(panBottoni);
-
-
 
         return panel;
     }
 
 
+    /**
+     * Avvia tutti i test ricorsivamente.
+     * Attende la fine di un test per avviare il successivo.
+     */
+    private void startOneSync(){
+        if(compInTest<Tests.values().length-1){
+            compInTest++;
+            Tests test=Tests.values()[compInTest];
+            BotTestComponent comp = components.get(test);
+            comp.setFinishedListener(new BotTestComponent.TestFinished() {
+                @Override
+                public void testFinished() {
+                    startOneSync();
+                }
+            });
+            comp.startOrStop();
 
-
+        }
+    }
 
     public JSlider getSpeedSlider() {
         return speedSlider;

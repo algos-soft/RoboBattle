@@ -1,9 +1,16 @@
 package it.robobattle;
 
+import it.robobattle.renderers.BotCompRendererer;
+import it.robobattle.renderers.HeaderRenderer;
+import it.robobattle.renderers.ScoreCompRenderer;
+import it.robobattle.renderers.ResultCompRendererer;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * Created by alex on 20-06-2016.
@@ -22,22 +29,17 @@ public class Tabellone extends JTable {
 
         setDefaultRenderer(Bot.class, new BotCompRendererer());
         setDefaultRenderer(TestSessionResult.class, new ResultCompRendererer());
+        setDefaultRenderer(Integer.class, new ScoreCompRenderer());
 
 
-        setRowHeight(100);
+        setRowHeight(120);
 
         setIntercellSpacing(new Dimension(20, 20));
 
-        //setRowSelectionAllowed(false);
+        getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 14));
+        getTableHeader().setDefaultRenderer(new HeaderRenderer(this));
 
-        getColumnModel().getColumn(0).setPreferredWidth(200);
-
-//        int numCols=getColumnModel().getColumnCount();
-//        for(int i=0; i<numCols-1; i++){
-//            getColumnModel().getColumn(i+1).setPreferredWidth(200);
-//
-//        }
-
+        getColumnModel().getColumn(0).setPreferredWidth(160);
 
         getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent event) {
@@ -45,6 +47,7 @@ public class Tabellone extends JTable {
                 battle.getbStart().setEnabled(enable);
             }
         });
+
 
     }
 

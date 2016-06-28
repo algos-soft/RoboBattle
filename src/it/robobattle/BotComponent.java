@@ -12,7 +12,7 @@ public class BotComponent extends JPanel {
 		this.bot = bot;
 
 		setLayout(new BorderLayout());
-		setPreferredSize(new Dimension(250, 60));
+		setPreferredSize(new Dimension(250, 100));
 
 
 		labelWinner=new JLabel("",SwingConstants.CENTER);

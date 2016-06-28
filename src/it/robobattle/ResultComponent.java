@@ -13,6 +13,7 @@ public class ResultComponent extends JPanel {
     public ResultComponent(TestSessionResult result) {
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 
         if(result!=null) {
 
@@ -29,13 +30,16 @@ public class ResultComponent extends JPanel {
             JLabel labelErr=new JLabel(snum + " errors");
 
             int pts = result.getPoints();
-            JLabel labelPts=new JLabel(pts + " points");
-            labelPts.setBorder(BorderFactory.createEmptyBorder(10,0,0,0));
-            labelPts.setForeground(Color.BLUE);
+            JLabel labelPts=new JLabel(pts + " points", SwingConstants.CENTER);
+            labelPts.setBackground(Color.BLUE);
+            labelPts.setForeground(Color.WHITE);
+            labelPts.setOpaque(true);
+            labelPts.setMaximumSize(new Dimension(Integer.MAX_VALUE, 28));
 
             add(labelTime);
             add(labelIter);
             add(labelErr);
+            add(Box.createRigidArea(new Dimension(6, 6)));
             add(labelPts);
 
             if(result.getErrcount()>0){

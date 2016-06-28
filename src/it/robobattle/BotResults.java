@@ -9,6 +9,8 @@ public class BotResults {
 
     private Bot bot;
     private HashMap<Tests, TestSessionResult> results;
+    private int score;
+
 
     public BotResults(Bot bot) {
         this.bot = bot;
@@ -26,4 +28,13 @@ public class BotResults {
     public Bot getBot() {
         return bot;
     }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
 }
