@@ -156,10 +156,11 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
 
             case DECRYPT_WORD:
                 request = getRandomString();
-                String key = "abcd";
+                String key = getRandomString();
+                String encrypted = BotAlgorhitms.encryptWord(request, key);
                 t1 = System.nanoTime();
                 try {
-                    response = getBot().decryptWord(request, key);
+                    response = getBot().decryptWord(encrypted, key);
                 }catch (Exception e){
                     error=e.getMessage();
                 }

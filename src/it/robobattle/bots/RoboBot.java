@@ -1,4 +1,7 @@
-package it.robobattle;
+package it.robobattle.bots;
+
+import it.robobattle.Bot;
+import it.robobattle.BotAlgorhitms;
 
 import java.awt.*;
 import java.math.BigInteger;
@@ -51,21 +54,13 @@ public class RoboBot implements Bot {
 
 	@Override
 	public String decryptWord(String in, String key) {
-		return null;
+		return BotAlgorhitms.decryptWord(in, key);
 	}
 
 	@Override
 	public String sortWord(String in) {
 		return BotAlgorhitms.sortWord(in);
 	}
-
-	public String rispondi(String in) {
-		for(int i=0;i<50000;i++){
-            BigInteger.ONE.multiply(BigInteger.valueOf(i));
-		}
-		return null;
-	}
-
 
 
 }

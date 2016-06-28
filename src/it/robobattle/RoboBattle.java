@@ -1,11 +1,14 @@
 package it.robobattle;
 
+import it.robobattle.bots.GigaBot;
+import it.robobattle.bots.KiloBot;
+import it.robobattle.bots.MegaBot;
+import it.robobattle.bots.RoboBot;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 import javax.swing.*;
 
@@ -17,7 +20,7 @@ public class RoboBattle extends CenteredFrame {
 	private final Tabellone tabellone;
 	private ArenaSettings arenaSettings;
 
-	public RoboBattle() {
+	public RoboBattle(Bot... inBots) {
 		super();
 		setTitle("RoboBattle");
 		setPreferredSize(new Dimension(960, 600));
@@ -31,10 +34,9 @@ public class RoboBattle extends CenteredFrame {
 		
 		bots = new ArrayList<Bot>();
 
-		bots.add(new RoboBot());
-		bots.add(new GigaBot());
-		bots.add(new MegaBot());
-		bots.add(new KiloBot());
+		for(Bot bot : inBots){
+			bots.add(bot);
+		}
 
 		// lista dei bot con relativi risultati
 		results=new ArrayList<BotResults>();
@@ -60,6 +62,8 @@ public class RoboBattle extends CenteredFrame {
 			}
 		});
 
+		pack();
+		setVisible(true);
 
 
 	}
@@ -222,11 +226,6 @@ public class RoboBattle extends CenteredFrame {
 		return result;
 	}
 
-	public static void main(String[] args) {
-		RoboBattle b = new RoboBattle();
-		b.pack();
-		b.setVisible(true);
-	}
 
 	public void refreshTable() {
 		tabellone.refresh();

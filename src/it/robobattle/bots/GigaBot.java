@@ -1,13 +1,20 @@
-package it.robobattle;
+package it.robobattle.bots;
+
+import it.robobattle.BotAdapter;
 
 import java.awt.*;
 import java.math.BigInteger;
 
-public class MegaBot extends BotAdapter {
+public class GigaBot extends BotAdapter {
 
 	@Override
 	public String getNome() {
-		return "MegaBot";
+		return "GigaBot";
+	}
+
+	@Override
+	public Color getColore() {
+		return Color.ORANGE;
 	}
 
 	/**
@@ -15,22 +22,12 @@ public class MegaBot extends BotAdapter {
 	 * @return lo slogan del bot
 	 */
 	public String getSlogan(){
-		return "Veni, vidi, vici";
-	}
-
-	@Override
-	public Color getColore() {
-		return Color.CYAN;
-	}
-
-	@Override
-	public String sortWord(String in) {
-		return BotAlgorhitms.sortWordErr(in);
+		return "La forza sia con noi!";
 	}
 
 
 	public String rispondi(String in) {
-		for(int i=0;i<20000;i++){
+		for(int i=0;i<10000;i++){
             BigInteger.ONE.multiply(BigInteger.valueOf(i));
 		}
 		return null;

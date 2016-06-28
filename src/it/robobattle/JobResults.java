@@ -113,7 +113,7 @@ public class JobResults {
                 String wordkey = word + "," + key;
                 if (exception == null) {
                     if (getResponse() != null) {
-                        String goodResponse = BotAlgorhitms.decryptWord(word, key);
+                        String goodResponse = word;
                         String checkResponse = (String) getResponse();
                         if (checkResponse.equals(goodResponse)) {
                             valid = true;

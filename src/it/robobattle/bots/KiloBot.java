@@ -1,4 +1,7 @@
-package it.robobattle;
+package it.robobattle.bots;
+
+import it.robobattle.Bot;
+import it.robobattle.BotAlgorhitms;
 
 import java.awt.*;
 import java.math.BigInteger;

@@ -44,9 +44,11 @@ public interface Bot {
 	 * @param in la parola da decrittare
 	 * @param key la chiave
 	 * @return la parola decrittata.
+	 * Ogni carattere corrisponde a un numero.
 	 * La somma delle vocali contenute nella chiave dà un numero segreto.
-	 * Alle lettere in posizione pari va aggiunto il numero segreto
-	 * Alle lettere in posizione dispari va sottratto il numero segreto
+	 * Alle lettere in posizione pari va aggiunto il numero segreto.
+	 * Alle lettere in posizione dispari va sottratto il numero segreto.
+	 * Il mi
 	 */
 	String decryptWord(String in, String key);
 

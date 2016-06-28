@@ -40,7 +40,7 @@ public class Robot2LaVendetta implements Bot {
 		 * @return il colore del bot
 		 */
 		public Color getColore(){
-			Color colore = Color.BLACK;
+			Color colore = Color.GRAY;
 			return colore;
 		}
 
