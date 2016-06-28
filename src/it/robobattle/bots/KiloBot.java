@@ -1,7 +1,7 @@
 package it.robobattle.bots;
 
 import it.robobattle.Bot;
-import it.robobattle.BotAlgorhitms;
+import it.robobattle.BotAlgorithms;
 
 import java.awt.*;
 import java.math.BigInteger;
@@ -29,29 +29,22 @@ public class KiloBot implements Bot {
 
 	@Override
 	public String invertWord(String in) {
-		return BotAlgorhitms.invertWordErr(in);
+		return BotAlgorithms.invertWordSlow(in);
 	}
 
 	@Override
 	public int calcChecksum(String in) {
-		return 0;
+		return BotAlgorithms.calcChecksum(in);
 	}
 
 	@Override
 	public String decryptWord(String in, String key) {
-		return null;
+		return BotAlgorithms.decryptWordSlow(in, key);
 	}
 
 	@Override
 	public String sortWord(String in) {
-		return BotAlgorhitms.sortWordSlow(in);
-	}
-
-	public String rispondi(String in) {
-		for(int i=0;i<30000;i++){
-            BigInteger.ONE.multiply(BigInteger.valueOf(i));
-		}
-		return null;
+		return BotAlgorithms.sortWord(in);
 	}
 
 

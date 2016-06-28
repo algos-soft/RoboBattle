@@ -41,14 +41,24 @@ public interface Bot {
 
 	/**
 	 * Decripta una parola in base a una chiave data.
-	 * @param in la parola da decrittare
+	 *
+	 * @param in  la parola da decrittare
 	 * @param key la chiave
 	 * @return la parola decrittata.
-	 * Ogni carattere corrisponde a un numero.
-	 * La somma delle vocali contenute nella chiave dà un numero segreto.
+	 * <p/>
+	 * Ogni carattere ha un valore numerico short corrispondente.
+	 * Essendo sia char che short valori a 16 bit, sono intercambiabili.
+	 * Per ottenere il numero dal carattere o il carattere dal
+	 * numero basta un casting, come da esempio:
+	 * char c1 = 'x';
+	 * short n = (short)c1;
+	 * char c2 = (char)n;
+	 * <p/>
+	 * La chiave ricevuta contiene solo lettere minuscole.
+	 * La somma dei valori delle vocali contenute nella chiave dà un numero segreto.
 	 * Alle lettere in posizione pari va aggiunto il numero segreto.
-	 * Alle lettere in posizione dispari va sottratto il numero segreto.
-	 * Il mi
+	 * Dalle lettere in posizione dispari va sottratto il numero segreto.
+	 * La prima lettera si intende alla posizione 1.
 	 */
 	String decryptWord(String in, String key);
 

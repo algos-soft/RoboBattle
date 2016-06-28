@@ -1,7 +1,5 @@
 package it.robobattle;
 
-import java.util.Arrays;
-
 /**
  * Tester delle implementazioni di Bot.
  */
@@ -12,7 +10,7 @@ public class BotTester {
 
     public BotTester(Bot bot) {
         this.bot = bot;
-        logLevel=2; // max
+        logLevel=1; // max = 2
     }
 
     /**
@@ -40,21 +38,21 @@ public class BotTester {
             switch (test){
 
                 case SORT_WORD:
-                    expected = BotAlgorhitms.sortWord(word);
+                    expected = BotAlgorithms.sortWord(word);
                     jobStartNanos=System.nanoTime();
                     obtained = bot.sortWord(word);
                     jobLengthNano=System.nanoTime()-jobStartNanos;
                     break;
 
                 case INVERT_WORD:
-                    expected = BotAlgorhitms.invertWord(word);
+                    expected = BotAlgorithms.invertWord(word);
                     jobStartNanos=System.nanoTime();
                     obtained = bot.invertWord(word);
                     jobLengthNano=System.nanoTime()-jobStartNanos;
                     break;
 
                 case CALC_CKECKSUM:
-                    expected = BotAlgorhitms.calcChecksum(word);
+                    expected = BotAlgorithms.calcChecksum(word);
                     jobStartNanos=System.nanoTime();
                     obtained = bot.calcChecksum(word);
                     jobLengthNano=System.nanoTime()-jobStartNanos;
@@ -62,7 +60,7 @@ public class BotTester {
 
                 case DECRYPT_WORD:
                     String key = "abcd";
-                    expected = BotAlgorhitms.decryptWord(word, key);
+                    expected = BotAlgorithms.decryptWord(word, key);
                     jobStartNanos=System.nanoTime();
                     obtained = bot.decryptWord(word, key);
                     jobLengthNano=System.nanoTime()-jobStartNanos;
@@ -93,7 +91,7 @@ public class BotTester {
 
         long totMillis=totNanos/1000000;
         long quantePerSec = quanteElab/totMillis*1000;
-        String s=bot.getNome()+" "+quanteElab+" elaborate, "+quanteOK+" OK, "+totMillis+" ms, "+quantePerSec+" wps";
+        String s=bot.getNome()+" "+test.getTestName()+" "+quanteElab+" elaborate, "+quanteOK+" OK, "+totMillis+" ms, "+quantePerSec+" wps";
         System.out.println(s);
 
     }

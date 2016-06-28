@@ -1,43 +1,46 @@
 package it.robobattle.bots;
 
-import it.robobattle.BotAdapter;
-import it.robobattle.BotAlgorhitms;
+import it.robobattle.Bot;
+import it.robobattle.BotAlgorithms;
 
 import java.awt.*;
 import java.math.BigInteger;
 
-public class MegaBot extends BotAdapter {
+public class MegaBot implements Bot {
+
 
 	@Override
 	public String getNome() {
 		return "MegaBot";
 	}
 
-	/**
-	 * Restituisce lo slogan del bot.
-	 * @return lo slogan del bot
-	 */
-	public String getSlogan(){
+	@Override
+	public String getSlogan() {
 		return "Veni, vidi, vici";
 	}
 
 	@Override
 	public Color getColore() {
-		return Color.CYAN;
+		return Color.ORANGE;
+	}
+
+	@Override
+	public String invertWord(String in) {
+		return BotAlgorithms.invertWordErr(in);
+	}
+
+	@Override
+	public int calcChecksum(String in) {
+		return BotAlgorithms.calcChecksumSlow(in);
+	}
+
+	@Override
+	public String decryptWord(String in, String key) {
+		return BotAlgorithms.decryptWordErr(in, key);
 	}
 
 	@Override
 	public String sortWord(String in) {
-		return BotAlgorhitms.sortWordErr(in);
+		return BotAlgorithms.sortWord(in);
 	}
-
-
-	public String rispondi(String in) {
-		for(int i=0;i<20000;i++){
-            BigInteger.ONE.multiply(BigInteger.valueOf(i));
-		}
-		return null;
-	}
-
-
 }

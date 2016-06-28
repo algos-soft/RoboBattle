@@ -1,11 +1,8 @@
 package it.robobattle;
 
-import javafx.scene.paint.*;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.*;
 import java.awt.Color;
 import java.text.NumberFormat;
 import java.util.List;
@@ -157,7 +154,7 @@ public class BotWorker extends SwingWorker<Void, JobStatus> {
             case DECRYPT_WORD:
                 request = getRandomString();
                 String key = getRandomString();
-                String encrypted = BotAlgorhitms.encryptWord(request, key);
+                String encrypted = BotAlgorithms.encryptWord(request, key);
                 t1 = System.nanoTime();
                 try {
                     response = getBot().decryptWord(encrypted, key);

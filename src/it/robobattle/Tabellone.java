@@ -41,6 +41,7 @@ public class Tabellone extends JTable {
 
         getColumnModel().getColumn(0).setPreferredWidth(160);
 
+
         getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent event) {
                 boolean enable = getSelectedRows().length == 1;

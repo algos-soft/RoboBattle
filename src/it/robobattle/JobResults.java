@@ -48,7 +48,7 @@ public class JobResults {
                 request = (String) getRequest();
                 if (exception == null) {
                     if (getResponse() != null) {
-                        String goodResponse = BotAlgorhitms.sortWord(request);
+                        String goodResponse = BotAlgorithms.sortWord(request);
                         String checkResponse = (String) getResponse();
                         if (checkResponse.equals(goodResponse)) {
                             valid = true;
@@ -69,7 +69,7 @@ public class JobResults {
                 request = (String) getRequest();
                 if (exception == null) {
                     if (getResponse() != null) {
-                        String goodResponse = BotAlgorhitms.invertWord(request);
+                        String goodResponse = BotAlgorithms.invertWord(request);
                         String checkResponse = (String) getResponse();
                         if (checkResponse.equals(goodResponse)) {
                             valid = true;
@@ -90,7 +90,7 @@ public class JobResults {
                 request = (String) getRequest();
                 if (exception == null) {
                     if (getResponse() != null) {
-                        int goodResponse = BotAlgorhitms.calcChecksum(request);
+                        int goodResponse = BotAlgorithms.calcChecksum(request);
                         int checkResponse = (Integer) getResponse();
                         if (checkResponse == goodResponse) {
                             valid = true;

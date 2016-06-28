@@ -23,7 +23,7 @@ public class DemoBattle {
 
         //new BotTester(new KiloBot()).startTest();
 
-        new RoboBattle(new RoboBot(), new GigaBot(), new MegaBot(), new KiloBot(), new Robot2LaVendetta());
+        new RoboBattle(new ReferenceBot(), new KiloBot(),new MegaBot(),  new GigaBot(),  new Robot2LaVendetta());
 
     }
 

@@ -7,7 +7,7 @@ import java.util.Random;
 /**
  * Created by alex on 15/06/16.
  */
-public class BotAlgorhitms {
+public class BotAlgorithms {
 
     /**
      * Ordina alfabeticamente le lettere di una parola.
@@ -155,6 +155,42 @@ public class BotAlgorhitms {
         return checksum;
     }
 
+    /**
+     * Calcola la checksum di una parola.
+     * Versione lenta.
+     */
+    public static int calcChecksumSlow(String in) {
+        int checksum = 0;
+        for(int i=0; i<in.length(); i++){
+            String sub = in.substring(i,i+1);
+            char[] chars=sub.toCharArray(); // size = 1
+            char c = chars[0];
+            checksum += (short) c;
+        }
+        return checksum;
+    }
+
+    /**
+     * Calcola la checksum di una parola.
+     * Versione con bug.
+     */
+    public static int calcChecksumErr(String in) {
+        int checksum = 0;
+        char[] chars = in.toCharArray();
+        for (char c : chars) {
+            checksum += (short) c;
+        }
+
+        // introduce errore nel 2% dei casi
+        int rand = new Random().nextInt(100);
+        if (rand <= 2) {
+            checksum++;
+        }
+
+        return checksum;
+    }
+
+
 
     /**
      * Decripta una parola in base a una chiave data.
@@ -194,6 +230,34 @@ public class BotAlgorhitms {
     }
 
     /**
+     * Decripta una parola in base a una chiave data.
+     * Versione lenta.
+     */
+    public static String decryptWordSlow(String in, String key) {
+        String out=decryptWord(in, key);
+        factorial(100);
+        return out;
+    }
+
+    /**
+     * Decripta una parola in base a una chiave data.
+     * Versione lenta.
+     */
+    public static String decryptWordErr(String in, String key) {
+        String out=decryptWord(in, key);
+
+        // introduce errore nel 1% dei casi
+        int rand = new Random().nextInt(100);
+        if (rand <= 1) {
+            out=out+"x";
+        }
+
+        return out;
+    }
+
+
+
+    /**
      * Cripta una parola con una data chiave.
      *
      * @param in  la parola
@@ -216,6 +280,7 @@ public class BotAlgorhitms {
         return new String(out);
     }
 
+
     private static short calcSecret(String key){
         short secret=0;
         char[] chars=key.toCharArray();
@@ -237,5 +302,13 @@ public class BotAlgorhitms {
         }
         return false;
     }
+
+    private static long factorial(long number) {
+        if (number <= 1)
+            return 1;
+        else
+            return number * factorial(number - 1);
+    }
+
 
 }
