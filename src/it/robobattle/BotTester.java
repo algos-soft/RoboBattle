@@ -9,7 +9,7 @@ import java.util.Random;
  * un test con 100 blocchi da 1000 parole ognuno:
  * </p>
  * <code>
- * Bot bot = new MyBot();
+ * Bot bot = new MyBot();<br>
  * BotTester tester=new BotTester(bot);<br>
  * tester.startTest(Tests.CALC_CKECKSUM, 100);<br>
  * </code>
