@@ -1,5 +1,7 @@
 package it.robobattle;
 
+import java.util.Random;
+
 /**
  * Tester delle implementazioni di Bot.
  * </p>
@@ -14,6 +16,8 @@ public class BotTester {
 
     private Bot bot;
     int logLevel = 0;
+    private Random random = new Random();    // random generator
+
 
     /**
      * Costruttore.
@@ -73,10 +77,11 @@ public class BotTester {
                     break;
 
                 case DECRYPT_WORD:
-                    String key = "abcd";
-                    expected = BotAlgorithms.decryptWord(word, key);
+                    String key = getRandomString();
+                    String encrypted = BotAlgorithms.encryptWord(word, key);
+                    expected=word;
                     jobStartNanos = System.nanoTime();
-                    obtained = bot.decryptWord(word, key);
+                    obtained = bot.decryptWord(encrypted, key);
                     jobLengthNano = System.nanoTime() - jobStartNanos;
                     break;
 
@@ -119,6 +124,15 @@ public class BotTester {
             }
         }
         return stringhe;
+    }
+
+
+    /**
+     * Ritorna una stringa random dal pool delle stringhe.
+     */
+    private String getRandomString() {
+        int rnd = random.nextInt(Data.STRINGHE.length);
+        return Data.STRINGHE[rnd];
     }
 
 

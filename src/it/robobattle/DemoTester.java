@@ -11,7 +11,7 @@ public class DemoTester {
 
         // sample bot test
         BotTester tester=new BotTester(new KiloBot());
-        tester.startTest(Tests.CALC_CKECKSUM, 100);
+        tester.startTest(Tests.DECRYPT_WORD, 100);
 
     }
 
