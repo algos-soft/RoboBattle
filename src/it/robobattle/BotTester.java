@@ -5,10 +5,12 @@ import java.util.Random;
 /**
  * Tester delle implementazioni di Bot.
  * </p>
- * Questo esempio istanzia un tester con un dato bot, ed esegue un test:
+ * L'esempio seguente istanzia un tester con un dato bot, ed esegue
+ * un test con 100 blocchi da 1000 parole ognuno:
  * </p>
  * <code>
- * BotTester tester=new BotTester(new MyBot());<br>
+ * Bot bot = new MyBot();
+ * BotTester tester=new BotTester(bot);<br>
  * tester.startTest(Tests.CALC_CKECKSUM, 100);<br>
  * </code>
  */
@@ -33,16 +35,16 @@ public class BotTester {
      * Avvia una sessione di test.
      * </p>
      *
-     * @param test         il test da eseguire
-     * @param quanteParole il numero di blocchi di parole da testare (1000 parole per blocco)
+     * @param test          il test da eseguire
+     * @param quantiBlocchi il numero di blocchi di parole da testare (1000 parole per blocco)
      */
-    public void startTest(Tests test, int quanteParole) {
+    public void startTest(Tests test, int quantiBlocchi) {
 
         int quanteElab = 0;
         int quanteOK = 0;
         long totNanos = 0;
         long i = 0;
-        String[] strings = creaStringhe(quanteParole);
+        String[] strings = creaStringhe(quantiBlocchi);
         for (String word : strings) {
             i++;
 
@@ -79,7 +81,7 @@ public class BotTester {
                 case DECRYPT_WORD:
                     String key = getRandomString();
                     String encrypted = BotAlgorithms.encryptWord(word, key);
-                    expected=word;
+                    expected = word;
                     jobStartNanos = System.nanoTime();
                     obtained = bot.decryptWord(encrypted, key);
                     jobLengthNano = System.nanoTime() - jobStartNanos;
@@ -139,9 +141,10 @@ public class BotTester {
     /**
      * Regola il livello di log.
      * </p>
-     * 0=normale (solo log finale)<br>
-     * 1=info (log dei soli errori e log finale, questo è il default)<br>
-     * 2=debug (log di tutte le operazioni e log finale)<br>
+     * 0=normale (stampa solo 1 riga di log alla fine del test)<br>
+     * 1=info (stampa una riga di log per ogni errore e la riga di log finale)<br>
+     * 2=debug (stampa il log di tutte le operazioni e la riga di log)<br>
+     * il livello di default è 1 (info)
      *
      * @param i il livello di log
      */
